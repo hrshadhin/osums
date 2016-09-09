@@ -22,7 +22,7 @@
 
   <body class="login">
     <div>
-      
+
 
       <div class="login_wrapper">
         <div class="animate form login_form">
@@ -63,7 +63,7 @@
                 <br />
 
                 <div>
-                  <h1><i class="fa fa-bank"></i> {{$institute->name}}</h1>
+                  <h2><i class="fa fa-bank"></i> {{$institute->name}}</h2>
                   <p>©2016 All Rights Reserved.</p>
                 </div>
               </div>

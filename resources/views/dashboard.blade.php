@@ -7,50 +7,99 @@
         <!-- page content -->
         <div class="right_col" role="main">
           <div class="">
-            <div class="page-title">
-              <div class="title_left">
-                <h3>Dashboard</h3>
+            <!-- /top tiles -->
+            <div class="row tile_count text-center">
+              <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-2x fa-home green"></i> Departments</span>
+                <div class="count red">{{$total["department"]}}</div>
               </div>
-
-              <!--<div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-
-                </div>
-              </div>-->
+              <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-2x fa-users green"></i> Admitted Students</span>
+                <div class="count blue">{{$total["admitted"]}}</div>
+              </div>
+              <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-2x fa-users green"></i> Registered Students</span>
+                <div class="count green">{{$total["registered"]}}</div>
+              </div>
             </div>
-
-            <div class="clearfix"></div>
-
+            <div class="row tile_count text-center">
+              <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-2x fa-book green"></i> Subjects</span>
+                <div class="count red">{{$total["subject"]}}</div>
+              </div>
+              <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-2x fa-pencil green"></i> Attendance(Days)</span>
+                <div class="count blue">{{$total["attendance"]}}</div>
+              </div>
+              <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-2x fa-edit green"></i> Exams</span>
+                <div class="count green">{{$total["exam"]}}</div>
+              </div>
+            </div>
+            <!-- /top tiles -->
+            <!-- Graph start -->
             <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Plain Page</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
+                    <h2>Accounting Report<small>(Monthly)</small></h2>
+                    <label class="total_bal">
+                                              Balance: {{$balance}}
+                                         </label>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                      Add content to the page ...
+                    <canvas  height="50" id="lineChart"></canvas>
                   </div>
                 </div>
               </div>
+
             </div>
-              <div class="clearfix"></div>
+<div class="clearfix"></div>
           </div>
         </div>
         <!-- /page content -->
+
+@endsection
+@section('extrascript')
+<script src="{{ URL::asset('assets/js/Chart.min.js')}}"></script>
+  <!-- Chart.js -->
+  <script>
+    Chart.defaults.global.legend = {
+      enabled: false
+    };
+
+    // Line chart
+    var ctx = document.getElementById("lineChart");
+    var lineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ["<?php echo join($incomes['key'], '","')?>"],
+        datasets: [{
+          label: "Income",
+          backgroundColor: "rgba(38, 185, 154, 0.31)",
+          borderColor: "rgba(38, 185, 154, 0.7)",
+          pointBorderColor: "rgba(38, 185, 154, 0.7)",
+          pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+          pointHoverBackgroundColor: "#fff",
+          pointHoverBorderColor: "rgba(220,220,220,1)",
+          pointBorderWidth: 1,
+          data: [<?php echo join($incomes['value'], ',')?>]
+        }, {
+          label: "Expence",
+          backgroundColor: "rgba(3, 88, 106, 0.3)",
+          borderColor: "rgba(3, 88, 106, 0.70)",
+          pointBorderColor: "rgba(3, 88, 106, 0.70)",
+          pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+          pointHoverBackgroundColor: "#fff",
+          pointHoverBorderColor: "rgba(151,187,205,1)",
+          pointBorderWidth: 1,
+          data: [<?php echo join($expences['value'], ',')?>]
+        }]
+      },
+    });
+
+
+
+</script>
 @endsection

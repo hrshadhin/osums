@@ -1,0 +1,61 @@
+.deleteForm{
+  display: inline;
+  max-resolution: 3px;
+}
+
+.stepContainer
+{
+  overflow-x:none;
+}
+
+.form-control-feedback {
+    margin-top: 30px;
+    color: #1ABB9C;
+
+}
+#divdropzone
+{
+  height: 200px !important;
+  min-height: 200px !important;
+  max-height: 200px !important;
+  width: 100%;
+}
+.dz-image-preview,.dz-image,.dz-image>img
+{
+  height: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+.dropzone{
+  padding: 0 !important;
+}
+
+.form_wizard .msgBox,.text-danger
+{
+  color:#ff0000;
+}
+@media screen and (max-width: 480px){
+  .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter
+  {
+    float: none;
+  }
+}
+
+.required{
+  color:red !important;
+}
+.btn-attend{
+  margin-top: 20px;
+float: right;
+}
+.custom-error .item.bad .alert{
+  top: -65px;
+float: right;
+}
+
+.total_bal{
+  float: right !important;
+  font-size: large;
+  font-weight: bold;
+  color:#2e6da4;
+}

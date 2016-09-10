@@ -50,8 +50,12 @@ Route::group(['middleware' => 'auth'], function()
 
   Route::resource('exam','ExamController');
   Route::post('exam/by-subject',[ 'as' => 'exam.index2','uses'=>'ExamController@index2']);
-  Route::get('result-subject',[ 'as' => 'result.subject','uses'=>'ResultController@subject']);
-  Route::get('result-individual',[ 'as' => 'result.individual','uses'=>'ResultController@individual']);
+  Route::get('result-subject',[ 'as' => 'result.subject','uses'=>'ResultController@getSubject']);
+  Route::post('result-subject',[ 'as' => 'result.subject.post','uses'=>'ResultController@postSubject']);
+  Route::get('result-student',[ 'as' => 'result.individual','uses'=>'ResultController@getStudent']);
+  Route::post('result-student',[ 'as' => 'result.individual.post','uses'=>'ResultController@postStudent']);
+
+
 
   //accounting routes
   Route::get('/accounting/sector',[ 'as' => 'accounting.sector.index','uses'=>'AccountingController@secIndex']);

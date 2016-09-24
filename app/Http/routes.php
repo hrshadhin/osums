@@ -55,7 +55,17 @@ Route::group(['middleware' => 'auth'], function()
   Route::get('result-student',[ 'as' => 'result.individual','uses'=>'ResultController@getStudent']);
   Route::post('result-student',[ 'as' => 'result.individual.post','uses'=>'ResultController@postStudent']);
 
-
+  //fees collection
+  Route::resource('fees','FeesController');
+  Route::get('/fees-list/{dId}',[ 'as' => 'fees.list','uses'=>'FeesController@lists']);
+  Route::get('/fees-collection',[ 'as' => 'fees.collection.index','uses'=>'FeesController@cIndex']);
+  Route::get('/fees-student/{stdId}',[ 'as' => 'fees.collection.studentfees','uses'=>'FeesController@studentFees']);
+  Route::get('/fees-collection/create',[ 'as' => 'fees.collection.create','uses'=>'FeesController@cCreate']);
+  Route::post('/fees-collection',[ 'as' => 'fees.collection.store','uses'=>'FeesController@cStore']);
+  //Route::post('/fees-collection/{id}',[ 'as' => 'fees.collection.destroy','uses'=>'FeesController@cDestroy']);
+  Route::get('/fees-getdue/{stdId}',[ 'as' => 'fees.getdue','uses'=>'FeesController@getDue']);
+  Route::get('/fees-collection/report',[ 'as' => 'fees.collection.report','uses'=>'FeesController@report']);
+  Route::post('/fees-collection/report',[ 'as' => 'fees.collection.report','uses'=>'FeesController@report']);
 
   //accounting routes
   Route::get('/accounting/sector',[ 'as' => 'accounting.sector.index','uses'=>'AccountingController@secIndex']);

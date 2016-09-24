@@ -6,36 +6,32 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
    <title>INSD - @yield("title")</title>
-
     <!-- Bootstrap -->
     <link href="{{ URL::asset('assets/css/bootstrap.min.css')}}" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="{{ URL::asset('assets/css/font-awesome.min.css')}}" rel="stylesheet">
-
-
     <link href="{{ URL::asset('assets/css/nprogress.css')}}" rel="stylesheet">
     <link href="{{ URL::asset('assets/css/jquery.mCustomScrollbar.min.css')}}" rel="stylesheet">
-
     <link href="{{ URL::asset('assets/css/pnotify.css')}}" rel="stylesheet">
     <link href="{{ URL::asset('assets/css/pnotify.buttons.css')}}" rel="stylesheet">
-
     @yield("extrastyle")
-
-      <!-- Custom Theme Style -->
+    <!-- Custom Theme Style -->
 		<link href="{{ URL::asset('assets/css/custom.min.css')}}" rel="stylesheet">
 		<link href="{{ URL::asset('assets/css/app.css')}}" rel="stylesheet">
 
   </head>
 
   <body class="nav-md footer_fixed">
-    <div class="container body">
+
+<div class="container body">
       <div class="main_container">
-        <div class="col-md-3 left_col menu_fixed">
+
+<div class="col-md-3 left_col menu_fixed">
           <div class="left_col scroll-view">
-            <div class="navbar nav_title" style="border: 0;">
-              <a href="{{URL::route('user.dashboard')}}" class="site_title"><i class="fa fa-bank"></i> <span> INSD[Diploma]</span></a>
+
+<div class="navbar nav_title" style="border: 0;">
+              <a href="{{URL::route('user.dashboard')}}" class="site_title"><i class="fa fa-bank"></i> <span> INSD</span></a>
             </div>
 
             <div class="clearfix"></div>
@@ -94,10 +90,18 @@
                       <li><a href="{{URL::route('accounting.expence.index')}}">Expence </a></li>
                       </ul>
                   </li>
+                  <li><a><i class="glyphicon glyphicon-list-alt"></i> Fees <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="{{URL::route('fees.index')}}">Fee List </a></li>
+                      <li><a href="{{URL::route('fees.collection.create')}}">Fee Collection </a></li>
+                      </ul>
+                  </li>
                   <li><a><i class="fa fa-print"></i> Reports <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="{{URL::route('accounting.reports.type')}}">Account By Type </a></li>
                       <li><a href="{{URL::route('accounting.reports.balance')}}">Account Balance </a></li>
+                      <li><a href="{{URL::route('fees.collection.index')}}">Student Fees </a></li>
+                      <li><a href="{{URL::route('fees.collection.report')}}">Fees Collection </a></li>
 
                       </ul>
                   </li>

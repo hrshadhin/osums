@@ -32,8 +32,8 @@
                           <input type="hidden" name="_token" value="{{ csrf_token() }}">
                           <div class="col-md-8 col-sm-12 col-xs-12">
                         <label for="department_id">Department *:</label>
-                        {!!Form::select('department_id', $departments, $selectDep, ['placeholder' => 'Pick a department','class'=>'select2_single form-control','tabindex'=>'-1','id'=>'department_id']) !!}
-
+                        {!!Form::select('department_id', $departments, $selectDep, ['placeholder' => 'Pick a department','class'=>'select2_single form-control has-feedback-left','tabindex'=>'-1','id'=>'department_id']) !!}
+                        <i class="fa fa-home form-control-feedback left" aria-hidden="true"></i>
                           <span id="msg_department_id" class="text-danger" ></span>
                         </div>
                           <div class="col-md-4 col-sm-12 col-xs-12">
@@ -51,9 +51,10 @@
                         <tr>
                           <th>Photo</th>
                           <th>Name</th>
-                          <th>ID no</th>
+                          <th>ID No</th>
                           <th>Session</th>
                           <th>BNC Reg.</th>
+                          <th>Batch No</th>
                           <th>Actions</th>
                         </tr>
                       </thead>
@@ -69,6 +70,7 @@
                           <td>{{$student->idNo}}</td>
                           <td>{{$student->session}}</td>
                           <td>{{$student->bncReg}}</td>
+                          <td>{{$student->batchNo}}</td>
                           <td>
                          <a title='View' class='btn btn-success btn-xs btnUpdate' href='{{URL::route('student.show',$student->id)}}'> <i class="glyphicon glyphicon-zoom-out icon-white"></i></a>
                          <a title='Update' class='btn btn-info btn-xs btnUpdate' id='{{$student->id}}' href='{{URL::route('student.edit',$student->id)}}'> <i class="glyphicon glyphicon-check icon-white"></i></a>

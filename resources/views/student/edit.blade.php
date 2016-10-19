@@ -66,7 +66,8 @@
                     <div class="row">
                       <div class="col-md-6 col-sm-6 col-xs-12">
                           <label for="department_id">Department *:</label>
-                          {{ Form::select('department_id',$departments,$student->department_id,['class'=>'select2_single form-control','tabindex'=>'-1','id'=>'department_id','disabled'=>'disabled']) }}
+                          {{ Form::select('department_id',$departments,$student->department_id,['class'=>'select2_single form-control has-feedback-left','tabindex'=>'-1','id'=>'department_id','disabled'=>'disabled']) }}
+                          <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
                             <span id="msg_department_id" class="text-danger" ></span>
                           </div>
                       <div class="col-md-6 col-sm-6 col-xs-12">
@@ -80,21 +81,25 @@
 
                     </div>
                     <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-4 col-sm-4 col-xs-12">
                             <label for="bncReg">BNC Reg. *:</label>
                             <input type="text" id="bncReg" class="form-control has-feedback-left" name="bncReg"  value="{{$student->bncReg}}"required />
                               <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
                                 <span id="msg_bncReg" class="text-danger" ></span>
                         </div>
-
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <label for="batchNo">Batch No *:</label>
+                            <input type="text" id="batchNo" class="form-control has-feedback-left" name="batchNo" value="{{$student->batchNo}}" required />
+                              <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
+                                <span id="msg_batchNo" class="text-danger" ></span>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
                             <label for="idNo">ID No *:</label>
                             <input type="text" id="idNo" disabled="disabled" class="form-control has-feedback-left" name="idNo" value="{{$student->idNo}}" required />
                               <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
                                 <span id="msg_idNo" class="text-danger" ></span>
                         </div>
-                          <div class="col-md-6 col-sm-6 col-xs-12">
-                          </div>
+
                       </div>
                   </div>
 
@@ -150,14 +155,23 @@
                           'O+'=>'O+',
                           'O-'=>'O-'
                           ];?>
-                          {{ Form::select('bloodgroup',$data,$student->bloodgroup,['class'=>'select2_single form-control','id'=>'bloodgroup','tabindex'=>'-1'])}}
+                          {{ Form::select('bloodgroup',$data,$student->bloodgroup,['class'=>'select2_single form-control has-feedback-left','id'=>'bloodgroup','tabindex'=>'-1'])}}
+                          <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
                           <span id="msg_bloodgroup" class="text-danger" ></span>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-6 col-sm-6 col-xs-12">
                           <label for="religion">Religion *:</label>
-                          <input type="text" id="religion" class="form-control has-feedback-left" value="{{$student->religion}}" name="religion" required />
+                          <?php  $data=[
+                          'Islam'=>'Islam',
+                          'Hindu'=>'Hindu',
+                          'Cristian'=>'Cristian',
+                          'Buddhist'=>'Buddhist',
+                          'Other'=>'Other'
+
+                          ];?>
+                          {{ Form::select('religion',$data,$student->religion,['class'=>'select2_single form-control has-feedback-left','id'=>'religion','tabindex'=>'-1'])}}
                             <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
                             <span id="msg_religion" class="text-danger" ></span>
 
@@ -262,7 +276,7 @@
                       </div>
 
                       <div class="col-md-4">
-                      <label for="parmanentAddress">Parmanent Address *:</label>
+                      <label for="parmanentAddress">Photograph *:</label>
                           <input type="file" id="photo" required="required" class="form-control has-feedback-left" name="photo">
                           <i class="fa fa-file-image-o form-control-feedback left" aria-hidden="true"></i>
                           <span id="msg_photo" class="text-danger" ></span>

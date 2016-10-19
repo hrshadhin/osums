@@ -14,6 +14,7 @@ class Student extends Model {
   'session',
   'department_id',
   'bncReg',
+  'batchNo',
   	'firstName',
   	'middleName',
   	'lastName',

@@ -61,7 +61,8 @@
                     <div class="row">
                       <div class="col-md-6 col-sm-6 col-xs-12">
                           <label for="department_id">Department *:</label>
-                          {!!Form::select('department_id', $departments, null, ['placeholder' => 'Pick a department','class'=>'select2_single form-control','tabindex'=>'-1','id'=>'department_id']) !!}
+                          {!!Form::select('department_id', $departments, null, ['placeholder' => 'Pick a department','class'=>'select2_single form-control has-feedback-left','tabindex'=>'-1','id'=>'department_id']) !!}
+                          <i class="fa fa-home form-control-feedback left" aria-hidden="true"></i>
                             <span id="msg_department_id" class="text-danger" ></span>
                           </div>
                       <div class="col-md-6 col-sm-6 col-xs-12">
@@ -75,21 +76,26 @@
 
                     </div>
                     <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-4 col-sm-4 col-xs-12">
                             <label for="bncReg">BNC Reg. *:</label>
                             <input type="text" id="bncReg" class="form-control has-feedback-left" name="bncReg" required />
                               <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
                                 <span id="msg_bncReg" class="text-danger" ></span>
                         </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <label for="batchNo">Batch No *:</label>
+                            <input type="text" id="batchNo" class="form-control has-feedback-left" name="batchNo" required />
+                              <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
+                                <span id="msg_batchNo" class="text-danger" ></span>
+                        </div>
 
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-4 col-sm-4 col-xs-12">
                             <label for="idNo">ID No *:</label>
                             <input type="text" id="idNo" class="form-control has-feedback-left" name="idNo" required />
                               <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
                                 <span id="msg_idNo" class="text-danger" ></span>
                         </div>
-                          <div class="col-md-6 col-sm-6 col-xs-12">
-                          </div>
+
                       </div>
                   </div>
 
@@ -129,7 +135,7 @@
                       </div>
                       <div class="col-md-4 col-sm-6 col-xs-12">
                           <label for="bloodgroup">Blood Group *:</label><br>
-                          <select name="bloodgroup" id="bloodgroup" class="select2_single form-control" tabindex="-1">
+                          <select name="bloodgroup" id="bloodgroup" class="has-feedback-left select2_single form-control" tabindex="-1">
                           <option></option>
                             <option value="A+">A+</option>
                               <option value="A-">A-</option>
@@ -141,13 +147,20 @@
                               <option value="O-">O-</option>
 
                           </select>
+                          <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
                           <span id="msg_bloodgroup" class="text-danger" ></span>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                          <label for="religion">Religion *:</label>
-                          <input type="text" id="religion" class="form-control has-feedback-left" name="religion" required />
+                          <label for="religion">Religion *:</label><br>
+                          <select name="religion" id="religion" class="has-feedback-left select2_single form-control" required>
+                                    <option value="Islam">Islam</option>
+                                  <option value="Hindu">Hindu</option>
+                                  <option value="Cristian">Cristian</option>
+                                  <option value="Buddhist">Buddhist</option>
+                                  <option value="Other">Other</option>
+                              </select>
                             <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
                             <span id="msg_religion" class="text-danger" ></span>
 
@@ -253,7 +266,7 @@
                       </div>
 
                       <div class="col-md-4">
-                      <label for="parmanentAddress">Parmanent Address *:</label>
+                      <label for="parmanentAddress">Photograph *:</label>
                           <input type="file" id="photo" required="required" class="form-control has-feedback-left" name="photo">
                           <i class="fa fa-file-image-o form-control-feedback left" aria-hidden="true"></i>
                           <span id="msg_photo" class="text-danger" ></span>
@@ -448,8 +461,8 @@ $(":input").inputmask();
        var dep = $('#department_id').val();
        var ses = $('#session').val();
        var sec = $('#bncReg').val();
-
        var id = $('#idNo').val();
+       var batchNo = $('#batchNo').val();
        if(!dep){
          isValid = false;
          $('#msg_department_id').html('Please select department!').show();
@@ -474,6 +487,12 @@ $(":input").inputmask();
          $('#msg_idNo').html('Please write ID no!').show();
        }else{
          $('#msg_idNo').html('').hide();
+       }
+       if(!batchNo){
+         isValid = false;
+         $('#msg_batchNo').html('Please write Batch no!').show();
+       }else{
+         $('#msg_batchNo').html('').hide();
        }
        return isValid;
     }

@@ -75,8 +75,9 @@
                                  <i class="fa fa-2x fa-home"></i> <strong>BNC Reg: </strong>  {{$student->bncReg}}
                                </li>
                                <li>
-                                 <i class="fa fa-2x fa-info-circle"></i> <strong>Semester: </strong>  {{$student->semester}}
+                                 <i class="fa fa-2x fa-info-circle"></i> <strong>Batch No: </strong>  {{$student->batchNo}}
                                </li>
+
                                <li>
                                  <i class="fa fa-2x fa-info-circle"></i> <strong>ID No: </strong>  {{$student->idNo}}
                                </li>

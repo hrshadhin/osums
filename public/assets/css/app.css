@@ -59,3 +59,9 @@ float: right;
   font-weight: bold;
   color:#2e6da4;
 }
+.select2-container{
+  width: 100% !important;
+}
+.select2-selection__rendered{
+  margin-left: 32px !important;
+}

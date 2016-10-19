@@ -117,6 +117,7 @@ class studentController extends Controller {
 			'session' => 'required',
 			'department_id' => 'required',
 			'bncReg' => 'required',
+			'batchNo' => 'required',
 			'firstName' => 'required',
 			'lastName' => 'required',
 			'gender' => 'required',
@@ -213,6 +214,7 @@ class studentController extends Controller {
 		$data=$request->all();
 		$rules=[
 			'bncReg' => 'required',
+			'batchNo' => 'required',
 			'firstName' => 'required',
 			'lastName' => 'required',
 			'gender' => 'required',

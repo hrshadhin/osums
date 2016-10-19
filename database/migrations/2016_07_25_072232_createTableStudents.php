@@ -16,9 +16,10 @@ class CreateTableStudents extends Migration {
 		{
 			$table->increments('id');
 			$table->string('idNo',20)->unique();
+			$table->string('batchNo',20)->nullable();
 			$table->string('session',15);
 		  $table->integer('department_id')->unsigned();
-			$table->string('bncReg',50);	
+			$table->string('bncReg',50);
 			$table->string('firstName',60);
 			$table->string('middleName',60);
 			$table->string('lastName',60);

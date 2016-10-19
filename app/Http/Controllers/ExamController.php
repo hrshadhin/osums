@@ -43,7 +43,8 @@ class ExamController extends Controller
     $semesters= $this->semesters;
     $exams= $this->exams;
     $departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
-    return view('exam.create',compact('departments','semesters','exams','subjects'));
+    $sessions=Student::select('session','session')->distinct()->lists('session','session');
+    return view('exam.create',compact('departments','sessions','semesters','exams','subjects'));
   }
 
   public function Store(Request $request)
@@ -110,11 +111,12 @@ class ExamController extends Controller
     $semesters= $this->semesters;
     $exams= $this->exams;
     $departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+    $sessions=Student::select('session','session')->distinct()->lists('session','session');
     $selectDep="";
     $selectSem="";
     $selectSub = "";
     $session="";
-    return view('exam.index',compact('selectDep','selectSem','selectSub','session','departments','marks','semesters','subjects','exam','exams'));
+    return view('exam.index',compact('selectDep','selectSem','selectSub','sessions','session','departments','marks','semesters','subjects','exam','exams'));
 
   }
   public function index2(Request $request){
@@ -132,6 +134,7 @@ class ExamController extends Controller
     $stdData= new Collection($stds,new MarksTransformer());
     $marks=$manager->createData($stdData)->toArray();
     $departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+    $sessions=Student::select('session','session')->distinct()->lists('session','session');
     $subjects=Subject::select('id','name')->where('department_id',$request->input('department_id'))->where('levelTerm',$request->input('levelTerm'))->orderby('code','asc')->lists('name', 'id');
 
     $exam =$request->input('exam');
@@ -141,7 +144,7 @@ class ExamController extends Controller
     $selectSem=$request->input('levelTerm');
     $selectSub = $request->input('subject_id');
     $session=$request->input('session');
-    return view('exam.index',compact('selectDep','selectSem','selectSub','session','departments','marks','semesters','subjects','exam','exams'));
+    return view('exam.index',compact('selectDep','selectSem','selectSub','sessions','session','departments','marks','semesters','subjects','exam','exams'));
 
 
   }

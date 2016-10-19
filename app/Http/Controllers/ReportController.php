@@ -171,7 +171,8 @@ class ReportController extends Controller
 		$fees=[];
 		$semesters= $this->semesters;
 		$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
-		return view('fees.index',compact('departments','students','semesters','fees'));
+		$sessions=Student::select('session','session')->distinct()->lists('session','session');
+		return view('fees.index',compact('departments','sessions','students','semesters','fees'));
 	}
 
 }

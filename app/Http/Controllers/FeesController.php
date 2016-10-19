@@ -101,11 +101,13 @@ class FeesController extends Controller
         $students=[];
         $semesters= $this->semesters;
         $departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+        $sessions=Student::select('session','session')->distinct()->lists('session','session');
+
         if(!count($isFeeSector)){
             $notification= array('title' => 'Data Missing', 'body' => '"Fees" income sector missiong in accounting! Without it fee collection not possible.');
             session::flash('error',$notification);
         }
-        return view('fees.collection',compact('departments','students','semesters','today'));
+        return view('fees.collection',compact('departments','sessions','students','semesters','today'));
     }
     public function cStore(Request $request){
         $isFeeSector= Sector::where('name','Fees')->where('type','Income')->first();

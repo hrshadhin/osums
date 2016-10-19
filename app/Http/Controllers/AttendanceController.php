@@ -38,7 +38,8 @@ class AttendanceController extends Controller
         $subjects=[];
         $semesters= $this->semesters;
         $departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
-        return view('attendance.create',compact('departments','students','semesters','subjects','today'));
+        $sessions=Student::select('session','session')->distinct()->lists('session','session');
+        return view('attendance.create',compact('departments','sessions','students','semesters','subjects','today'));
     }
     public function Store(Request $request)
     {
@@ -101,11 +102,12 @@ class AttendanceController extends Controller
         $subjects=[];
         $semesters= $this->semesters;
         $departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+        $sessions=Student::select('session','session')->distinct()->lists('session','session');
         $selectDep="";
         $selectSem="";
         $selectSub = "";
         $session="";
-        return view('attendance.index',compact('selectDep','selectSem','selectSub','session','departments','students','semesters','subjects','today'));
+        return view('attendance.index',compact('selectDep','selectSem','selectSub','session','departments','sessions','students','semesters','subjects','today'));
 
     }
     public function index2(Request $request){
@@ -124,6 +126,7 @@ class AttendanceController extends Controller
         $stdData= new Collection($stds,new AttendanceTransformer());
         $students=$manager->createData($stdData)->toArray();
         $departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+        $sessions=Student::select('session','session')->distinct()->lists('session','session');
         $subjects=Subject::select('id','name')->where('department_id',$request->input('department_id'))->where('levelTerm',$request->input('levelTerm'))->orderby('code','asc')->lists('name', 'id');
 
         $semesters= $this->semesters;
@@ -134,7 +137,7 @@ class AttendanceController extends Controller
         $session=$request->input('session');
         $today = $dateJunk;
 
-        return view('attendance.index',compact('selectDep','selectSub','session','departments','students','semesters','subjects','today','selectSem'));
+        return view('attendance.index',compact('selectDep','selectSub','session','sessions','departments','students','semesters','subjects','today','selectSem'));
 
     }
     public function update(Request $request,$id){

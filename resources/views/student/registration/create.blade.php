@@ -28,7 +28,8 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="department">Department <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                           {!!Form::select('department_id', $departments, null, ['placeholder' => 'Pick a department','class'=>'select2_single department form-control col-md-7 col-xs-12','required'=>'required','id'=>'department_id'])!!}
+                           {!!Form::select('department_id', $departments, null, ['placeholder' => 'Pick a department','class'=>'select2_single department form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required','id'=>'department_id'])!!}
+                           <i class="fa fa-home form-control-feedback left top-25" aria-hidden="true"></i>
                            <span class="text-danger">{{ $errors->first('department_id') }}</span>
                         </div>
                      </div>
@@ -36,14 +37,16 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="session">Session <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                           <input type="text" id="session" class="form-control has-feedback-left" name="session" data-inputmask="'mask': '9999-9999'" required />
-                        </div>
+                           {!!Form::select('session', $sessions, null, ['placeholder' => 'Pick a Session','class'=>'select2_single session form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required' ,'id'=>'session'])!!}
+                           <i class="fa fa-clock-o form-control-feedback left top-25" aria-hidden="true"></i>
+                           <span class="text-danger">{{ $errors->first('session') }}</span>                       </div>
                      </div>
                      <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="students_id">Student <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                           {!!Form::select('students_id', $students, null, ['placeholder' => 'Pick a Student','class'=>'select2_single student form-control col-md-7 col-xs-12','required'=>'required' ,'id'=>'students_id'])!!}
+                           {!!Form::select('students_id', $students, null, ['placeholder' => 'Pick a Student','class'=>'select2_single student form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required' ,'id'=>'students_id'])!!}
+                           <i class="fa fa-user form-control-feedback left top-25" aria-hidden="true"></i>
                            <span class="text-danger">{{ $errors->first('students_id') }}</span>
                         </div>
                      </div>
@@ -51,7 +54,8 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="levelTerm">Semester <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                           {!!Form::select('levelTerm', $semesters, null, ['placeholder' => 'Pick a Semester','class'=>'select2_single semester form-control col-md-7 col-xs-12','required'=>'required'])!!}
+                           {!!Form::select('levelTerm', $semesters, null, ['placeholder' => 'Pick a Semester','class'=>'select2_single semester form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required'])!!}
+                           <i class="fa fa-info form-control-feedback left top-25" aria-hidden="true"></i>
                            <span class="text-danger">{{ $errors->first('levelTerm') }}</span>
                         </div>
                      </div>
@@ -77,7 +81,6 @@
 
       <script src="{{ URL::asset('assets/js/validator.min.js')}}"></script>
       <script src="{{ URL::asset('assets/js/select2.full.min.js')}}"></script>
-      <script src="{{ URL::asset('assets/js/jquery.inputmask.bundle.min.js')}}"></script>
       <script src="{{ URL::asset('assets/js/validator.min.js')}}"></script>
       <!-- validator -->
       <script>
@@ -147,11 +150,15 @@
          placeholder: "Pick a student",
          allowClear: true
       });
+      $(".session").select2({
+         placeholder: "Pick a Session",
+         allowClear: true
+      });
       $(".semester").select2({
          placeholder: "Pick a semester",
          allowClear: true
       });
-      $(":input").inputmask();
+
       //get students lists
       $('#session').focusout(function (){
          var dept= $('#department_id').val();

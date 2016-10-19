@@ -41,8 +41,9 @@ class ResultController extends Controller
     $semesters= $this->semesters;
 
     $departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+    $sessions=Student::select('session','session')->distinct()->lists('session','session');
 
-    return view('reports.result.subject',compact('departments','semesters','subjects'));
+    return view('reports.result.subject',compact('departments','sessions','semesters','subjects'));
 
   }
   public function postSubject(Request $request){
@@ -104,8 +105,8 @@ class ResultController extends Controller
     $students=[];
     $exams = $this->exams;
     $departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
-
-    return view('reports.result.student',compact('departments','students','exams'));
+    $sessions=Student::select('session','session')->distinct()->lists('session','session');
+    return view('reports.result.student',compact('departments','sessions','students','exams'));
 
   }
   public function postStudent(Request $request){

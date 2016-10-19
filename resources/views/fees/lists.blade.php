@@ -34,8 +34,9 @@
                                         <div class="item form-group">
                                             <label class="control-label " for="department">Department <span class="required">*</span>
                                             </label>
-                                            {!!Form::select('department_id', $departments, null, ['placeholder' => 'Pick a department','class'=>'select2_single department form-control','required'=>'required','id'=>'department_id'])!!}
-                                            <span class="text-danger">{{ $errors->first('department_id') }}</span>
+                                            {!!Form::select('department_id', $departments, null, ['placeholder' => 'Pick a department','class'=>'select2_single department form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required','id'=>'department_id'])!!}
+                                         <i class="fa fa-home form-control-feedback left" aria-hidden="true"></i>
+                                       <span class="text-danger">{{ $errors->first('department_id') }}</span>
 
                                         </div>
                                     </div>
@@ -130,6 +131,7 @@
     <script src="{{ URL::asset('assets/js/jszip.min.js')}}"></script>
     <script src="{{ URL::asset('assets/js/pdfmake.min.js')}}"></script>
     <script src="{{ URL::asset('assets/js/vfs_fonts.js')}}"></script>
+    <script src="{{ URL::asset('assets/js/select2.full.min.js')}}"></script>
     <script src="{{ URL::asset('assets/js/sweetalert.min.js')}}"></script>
     <script>
     $(document).ready(function() {
@@ -203,6 +205,10 @@
                 form.submit();
             });
         });
+        $(".department").select2({
+       placeholder: "Pick a department",
+       allowClear: true
+    });
     });
 
     </script>

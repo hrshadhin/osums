@@ -65,3 +65,6 @@ float: right;
 .select2-selection__rendered{
   margin-left: 32px !important;
 }
+.top-25{
+  top:-25px !important;
+}

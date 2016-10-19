@@ -31,15 +31,21 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <div class="col-md-4 col-sm-12 col-xs-12">
                                     <label for="department_id">Department: <span class="required">*</span></label>
-                                    {!!Form::select('department_id', $departments, $selectDep, ['placeholder' => 'Pick a department','class'=>'select2_single department form-control','tabindex'=>'-1','id'=>'department_id']) !!}
+                                    {!!Form::select('department_id', $departments, $selectDep, ['placeholder' => 'Pick a department','class'=>'select2_single department form-control has-feedback-left','tabindex'=>'-1','id'=>'department_id']) !!}
+                                    <i class="fa fa-home form-control-feedback left" aria-hidden="true"></i>
+
                                 </div>
                                 <div class="col-md-2 col-sm-12 col-xs-12">
                                     <label for="session">Session: <span class="required">*</span></label>
-                                    <input type="text" id="session" class="form-control has-feedback-left" name="session" data-inputmask="'mask': '9999-9999'" required value="{{$session}}"/>
+                                    {!!Form::select('session', $sessions, $session, ['placeholder' => 'Pick a Session','class'=>'select2_single session form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required' ,'id'=>'session'])!!}
+                                    <i class="fa fa-clock-o form-control-feedback left" aria-hidden="true"></i>
+
                                 </div>
                                 <div class="col-md-4 col-sm-12 col-xs-12">
                                     <label for="levelTerm">Semester: <span class="required">*</span></label>
-                                    {!!Form::select('levelTerm', $semesters, $selectSem, ['placeholder' => 'Pick a Semester','class'=>'select2_single semester form-control col-md-7 col-xs-12','required'=>'required'])!!}
+                                    {!!Form::select('levelTerm', $semesters, $selectSem, ['placeholder' => 'Pick a Semester','class'=>'select2_single semester form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required'])!!}
+                                    <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
+
                                 </div>
 
                                 <div class="col-md-2 col-sm-12 col-xs-12">
@@ -108,14 +114,17 @@
 <script src="{{ URL::asset('assets/js/jszip.min.js')}}"></script>
 <script src="{{ URL::asset('assets/js/pdfmake.min.js')}}"></script>
 <script src="{{ URL::asset('assets/js/vfs_fonts.js')}}"></script>
-<script src="{{ URL::asset('assets/js/jquery.inputmask.bundle.min.js')}}"></script>
 <script src="{{ URL::asset('assets/js/select2.full.min.js')}}"></script>
 <script src="{{ URL::asset('assets/js/sweetalert.min.js')}}"></script>
 <script>
 $(document).ready(function() {
-    $(":input").inputmask();
+
     $(".department").select2({
         placeholder: "Select Department",
+        allowClear: true
+    });
+    $(".session").select2({
+        placeholder: "Select session",
         allowClear: true
     });
     $(".semester").select2({

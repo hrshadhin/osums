@@ -296,10 +296,12 @@ class studentController extends Controller {
 	*/
 	public function regCreate()
 	{
+		Student::select('session','session')->distinct()->lists('session','session');
 		$students=[];
 		$semesters= $this->semesters;
 		$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
-		return view('student.registration.create',compact('departments','students','semesters'));
+		$sessions=Student::select('session','session')->distinct()->lists('session','session');
+		return view('student.registration.create',compact('departments','students','semesters','sessions'));
 	}
 	public function regStore(Request $request){
 		$data=$request->all();
@@ -338,12 +340,13 @@ class studentController extends Controller {
 
 	public function regIndex(){
 		$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+		$sessions=Student::select('session','session')->distinct()->lists('session','session');
 		$selectDep="";
 		$students =array();
 		$semesters= $this->semesters;
 		$selectSem="";
 		$session="";
-		return view('student.registration.index',compact('session','students','departments','selectDep','semesters','selectSem'));
+		return view('student.registration.index',compact('session','students','sessions','departments','selectDep','semesters','selectSem'));
 	}
 	public function regList(Request $request){
 
@@ -356,11 +359,12 @@ class studentController extends Controller {
 			->get();
 
 		$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+		$sessions=Student::select('session','session')->distinct()->lists('session','session');
 		$selectDep=$request->input('department_id');
 		$semesters= $this->semesters;
 		$selectSem=$request->input('levelTerm');
 		$session=$request->input('session');
-		return view('student.registration.index',compact('session','students','departments','selectDep','semesters','selectSem'));
+		return view('student.registration.index',compact('session','sessions','students','departments','selectDep','semesters','selectSem'));
 
 	}
 	public function regDestroy($id)

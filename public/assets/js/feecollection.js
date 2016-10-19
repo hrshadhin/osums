@@ -39,7 +39,10 @@ $(document).ready(function() {
       placeholder: "Pick a semester",
       allowClear: true
    });
-   $(":input").inputmask();
+   $(".session").select2({
+      placeholder: "Pick a session",
+      allowClear: true
+   });
    //get student lists
    $('#levelTerm').on('change',function (){
       var dept= $('#department_id').val();
@@ -246,7 +249,7 @@ $(document).ready(function() {
             var gtotal = parseFloat($('#previousdue').val())+parseFloat($('#ctotal').val())+parseFloat($('#lateFee').val());
             $('#gtotal').val(gtotal);
             var paidamount =parseFloat($('#paidamount').val());
-            var due = gtotal-paidamount;            
+            var due = gtotal-paidamount;
             $('#dueamount').val(due);
 
          }

@@ -30,7 +30,8 @@
                       <label class="control-label " for="department">Department <span class="required">*</span>
                       </label>
 
-                      {!!Form::select('department_id', $departments, null, ['placeholder' => 'Pick a department','class'=>'select2_single department form-control col-md-7 col-xs-12','required'=>'required','id'=>'department_id'])!!}
+                      {!!Form::select('department_id', $departments, null, ['placeholder' => 'Pick a department','class'=>'select2_single department form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required','id'=>'department_id'])!!}
+                      <i class="fa fa-home form-control-feedback left" aria-hidden="true"></i>
                       <span class="text-danger">{{ $errors->first('department_id') }}</span>
 
                     </div>
@@ -40,7 +41,8 @@
                     <div class="item form-group">
                       <label class="control-label" for="session">Session <span class="required">*</span>
                       </label>
-                      <input type="text" id="session" class="form-control has-feedback-left"  name="session" data-inputmask="'mask': '9999-9999'" required />
+                      {!!Form::select('session', $sessions, null, ['placeholder' => 'Pick a Session','class'=>'select2_single session form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required' ,'id'=>'session'])!!}
+                      <i class="fa fa-clock-o form-control-feedback left" aria-hidden="true"></i>
                       <span class="text-danger">{{ $errors->first('session') }}</span>
 
                     </div>
@@ -50,7 +52,8 @@
                       <label class="control-label" for="levelTerm">Semester <span class="required">*</span>
                       </label>
 
-                      {!!Form::select('levelTerm', $semesters, null, ['placeholder' => 'Pick a Semester','class'=>'select2_single semester form-control col-md-7 col-xs-12', 'id'=>'levelTerm','required'=>'required'])!!}
+                      {!!Form::select('levelTerm', $semesters, null, ['placeholder' => 'Pick a Semester','class'=>'select2_single semester form-control col-md-7 col-xs-12 has-feedback-left', 'id'=>'levelTerm','required'=>'required'])!!}
+                      <i class="fa fa-info form-control-feedback left" aria-hidden="true"></i>
                       <span class="text-danger">{{ $errors->first('levelTerm') }}</span>
 
                     </div>
@@ -63,7 +66,8 @@
                       <label class="control-label" for="subject_id">Subject <span class="required">*</span>
                       </label>
 
-                      {!!Form::select('subject_id',$subjects, null, ['placeholder' => 'Pick a Subject','class'=>'select2_single subject form-control col-md-7 col-xs-12','required'=>'required' ,'id'=>'subject_id'])!!}
+                      {!!Form::select('subject_id',$subjects, null, ['placeholder' => 'Pick a Subject','class'=>'select2_single subject form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required' ,'id'=>'subject_id'])!!}
+                      <i class="fa fa-book form-control-feedback left" aria-hidden="true"></i>
                       <span class="text-danger">{{ $errors->first('subject_id') }}</span>
 
                     </div>
@@ -96,16 +100,18 @@
   @endsection
   @section('extrascript')
   <!-- dataTables -->
-  <script src="{{ URL::asset('assets/js/jquery.inputmask.bundle.min.js')}}"></script>
   <script src="{{ URL::asset('assets/js/select2.full.min.js')}}"></script>
   <script src="{{ URL::asset('assets/js/validator.min.js')}}"></script>
 
   <script>
   $(document).ready(function() {
 
-    $(":input").inputmask();
     $(".department").select2({
       placeholder: "Select Department",
+      allowClear: true
+    });
+    $(".session").select2({
+      placeholder: "Select session",
       allowClear: true
     });
     $(".semester").select2({

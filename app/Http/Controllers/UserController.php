@@ -13,7 +13,10 @@ use Validator;
 use Hash;
 class UserController extends Controller {
 
-
+	public function __construct()
+	{
+		$this->middleware('admin', ['except' => ['login', 'logout','settings','postSettings']]);
+	}
 	/**
 	* Make Login
 	*
@@ -63,7 +66,16 @@ class UserController extends Controller {
 		return Redirect::to('/')->with('success', 'Your are now logged out!');
 	}
 
-
+	/**
+	* Show all user.
+	*
+	* @return Response
+	*/
+	public function index()
+	{
+		$users = User::all();
+		return view('user.index',compact('users'));
+	}
 	/**
 	* Show the form for creating a new resource.
 	*
@@ -71,7 +83,7 @@ class UserController extends Controller {
 	*/
 	public function create()
 	{
-		//
+		return view('user.create');
 	}
 
 
@@ -80,47 +92,32 @@ class UserController extends Controller {
 	*
 	* @return Response
 	*/
-	public function store()
+	public function store(Request $request)
 	{
-
+		$data=$request->all();
+		$rules=[
+			'firstname' => 'required|max:255',
+			'lastname' => 'required|max:255',
+			'group' => 'required',
+			'login' => 'required|unique:users',
+			'emal' => 'email',
+			'password' => 'required|confirmed|min:6'
+		];
+		$message=[
+			'unique' => 'User name already exits!'
+		];
+		$validator = Validator::make($data, $rules,$message);
+		if ($validator->fails())
+		{
+			return Redirect::route('user.create')->withErrors($validator);
+		}
+		else {
+			$user= new User;
+			$user->create($data);
+			$notification= array('title' => 'Data Store', 'body' => 'User Created Succesfully.');
+			return Redirect::route('user.create')->with("success",$notification);
+		}
 	}
-
-
-	/**
-	* Display the specified resource.
-	*
-	* @param  int  $id
-	* @return Response
-	*/
-	public function show($id)
-	{
-		//
-	}
-
-
-	/**
-	* Show the form for editing the specified resource.
-	*
-	* @param  int  $id
-	* @return Response
-	*/
-	public function edit($id)
-	{
-		//
-	}
-
-
-	/**
-	* Update the specified resource in storage.
-	*
-	* @param  int  $id
-	* @return Response
-	*/
-	public function update($id)
-	{
-		//
-	}
-
 
 	/**
 	* Remove the specified resource from storage.
@@ -130,10 +127,14 @@ class UserController extends Controller {
 	*/
 	public function destroy($id)
 	{
-		//
+		$user = User::findOrFail($id);
+		$user->delete();
+		$notification= array('title' => 'Data Delete', 'body' => 'User Deleted Succesfully.');
+		return Redirect::route('user.index')->with("success",$notification);
 	}
+
 	/**
-	* Remove the specified resource from storage.
+	* Change the specified user informations.
 	*
 	*@return Response
 	*/

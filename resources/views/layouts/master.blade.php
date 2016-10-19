@@ -44,6 +44,7 @@
               <div class="menu_section">
                 <h3>Primary Menu</h3>
                 <ul class="nav side-menu">
+                  @can('Admin')
                   <li><a><i class="fa fa-home"></i> Departments <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="{{URL::route('department.create')}}">Add New</a></li>
@@ -65,6 +66,8 @@
                       <li><a href="{{URL::route('student.registration.index')}}">Registered Student List</a></li>
                       </ul>
                   </li>
+                  @endcan
+                  @if(Gate::check('Admin') || Gate::check('Teacher'))
                   <li><a><i class="fa fa-pencil"></i> Attendance <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="{{URL::route('attendance.create')}}">New </a></li>
@@ -83,6 +86,8 @@
                       <li><a href="{{URL::route('result.individual')}}">Student Wise</a></li>
                       </ul>
                   </li>
+                  @endif
+                  @if(Gate::check('Admin') || Gate::check('Account'))
                   <li><a><i class="fa fa-money"></i> Accounting <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="{{URL::route('accounting.sector.index')}}">Sector </a></li>
@@ -105,9 +110,18 @@
 
                       </ul>
                   </li>
+                  @endif
+                  @can('Admin')
+                  <li><a><i class="fa fa-users"></i> Users <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="{{URL::route('user.create')}}">New</a></li>
+                      <li><a href="{{URL::route('user.index')}}">All User</a></li>
+                    </ul>
+                  </li>
                   <li><a  href="{{URL::route('institute.index')}}"><i class="fa fa-building" ></i> Institute </a>
 
                   </li>
+                  @endcan
                 </ul>
               </div>
               <div class="menu_section">

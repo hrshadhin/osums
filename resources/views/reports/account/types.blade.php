@@ -121,7 +121,7 @@
 
  <script>
    $(document).ready(function() {
-    
+
      $('#reservation').daterangepicker({ format:'D/M/YYYY'});
      //datatables code
      var handleDataTableButtons = function() {
@@ -182,7 +182,7 @@
      @if(count($accounts)==0)
      new PNotify({
        title: "Data Fetch",
-       text: 'There are no invoice in date range.',
+       text: 'There are no transaction in date range.',
        styling: 'bootstrap3'
      });
      @endif

@@ -20,6 +20,10 @@ use App\Registration;
 use App\Institute;
 class FeesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('account');
+    }
     protected $semesters=[
         'L1T1' => 'First Year 1st Semester',
         'L1T2' => 'First Year 2nd Semester',
@@ -89,13 +93,7 @@ class FeesController extends Controller
         ], 200);
     }
 
-    public function cIndex(){
-        $students=[];
-        $fees=[];
-        $semesters= $this->semesters;
-        $departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
-        return view('fees.index',compact('departments','students','semesters','fees'));
-    }
+
 
     public function cCreate(){
         $isFeeSector= Sector::where('name','Fees')->where('type','Income')->first();
@@ -190,49 +188,5 @@ class FeesController extends Controller
         return redirect()->back()->with("success",$notification);
     }
 
-    public function studentFees($stdId){
-        $student = Student::with('department')->where('id',$stdId)->first();
-        $fees= FeeCollection::where('students_id',$stdId)
-        ->get();
-        $totals = FeeCollection::select(DB::RAW('IFNULL(sum(payableAmount),0) as payTotal,IFNULL(sum(paidAmount),0) as paiTotal,(IFNULL(sum(payableAmount),0)- IFNULL(sum(paidAmount),0)) as dueamount'))
-        ->where('students_id',$stdId)
-        ->first();
-        $institute = Institute::select('name')->first();
-        $metaDatas= [
-            'institute' => $institute->name,
-            'department' => $student->department->name,
-            'session' => $student->session,
-            'name'    => $student->firstName.' '.$student->middleName.' '.$student->lastName,
-            'fatherName' => $student->fatherName,
-            'motherName' => $student->motherName,
-            'dob' => $student->dob->format('F j,Y'),
-            'idNo' => $student->idNo,
-            'bncReg' => $student->bncReg,
-
-        ];
-        $metaData= (object)$metaDatas;
-        return view('reports.fees.stdFees',compact('metaData','fees','totals'));
-    }
-    public function report(Request $request){
-
-        $fromDate = Carbon::yesterday();
-        $toDate = Carbon::today();
-        if ($request->isMethod('post'))
-        {
-            $dateRange=$request->input('DateRange');
-            $dateList=explode('-',$dateRange);
-            $fromDate=Carbon::createFromFormat('d/m/Y', trim($dateList[0]));
-            $toDate=Carbon::createFromFormat('d/m/Y', trim($dateList[1]));
-        }
-        $fees= FeeCollection::where('payDate','>=',$fromDate->format('Y-m-d'))
-        ->where('payDate','<=',$toDate->format('Y-m-d'))->get();
-        $totals = FeeCollection::select(DB::RAW('IFNULL(sum(payableAmount),0) as payTotal,IFNULL(sum(paidAmount),0) as paiTotal,(IFNULL(sum(payableAmount),0)- IFNULL(sum(paidAmount),0)) as dueamount'))
-        ->where('payDate','>=',$fromDate->format('Y-m-d'))
-        ->where('payDate','<=',$toDate->format('Y-m-d'))
-        ->first();
-        $fromDate=$fromDate->format('d/m/Y');
-        $toDate=$toDate->format('d/m/Y');
-        return view('reports.fees.collection',compact('totals','fees','fromDate','toDate'));
-    }
 
 }

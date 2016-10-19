@@ -53,9 +53,9 @@
                         </label>
                         <div class="input-group">
                           <span class="input-group-addon"><i class="fa fa-info blue"></i></span>
-                          <input type="text" disabled="disabled" class="form-control"  name="userName" value="{{$user->userName}}" placeholder="admin33" required="required">
+                          <input type="text" disabled="disabled" class="form-control"  name="login" value="{{$user->login}}" placeholder="" required="required">
                         </div>
-                        <span class="text-danger">{{ $errors->first('userName') }}</span>
+                        <span class="text-danger">{{ $errors->first('login') }}</span>
 
                       </div>
                     </div>

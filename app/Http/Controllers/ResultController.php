@@ -17,6 +17,11 @@ use Carbon\Carbon;
 
 class ResultController extends Controller
 {
+  public function __construct()
+	{
+		$this->middleware('teacher');
+
+	}
   protected $semesters=[
     'L1T1' => 'First Year 1st Semester',
     'L1T2' => 'First Year 2nd Semester',

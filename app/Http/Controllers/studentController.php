@@ -25,6 +25,7 @@ class studentController extends Controller {
 	];
 	public function __construct(Student $student)
 	{
+		$this->middleware('admin',['except' => ['registeredStudentList']]);
 		$this->student = $student;
 	}
 	/**

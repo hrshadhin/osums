@@ -11,7 +11,6 @@ use App\Department;
 use Validator;
 use App\Transformers\SubjectTransformer;
 class SubjectController extends Controller {
-
    protected $subject;
    protected $semesters=[
       'L1T1' => 'First Year 1st Semester',
@@ -23,6 +22,7 @@ class SubjectController extends Controller {
    ];
    public function __construct(Subject $subject)
    {
+      $this->middleware('admin',['except' => ['subjetsByDptSem']]);
       $this->subject = $subject;
    }
 

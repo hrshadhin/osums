@@ -17,9 +17,9 @@ class CreateTableUsers extends Migration {
 			$table->increments('id');
 			$table->string('firstname', 50);
 			$table->string('lastname', 50);
-			$table->string('description');
+			$table->string('description')->nullable();
 			$table->string('login', 20)->unique();
-			$table->string('email', 100)->unique();
+			$table->string('email', 100)->nullable();
 			$table->string('group',20);
 			$table->string('password');
 			$table->rememberToken();

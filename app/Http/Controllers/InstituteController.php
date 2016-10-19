@@ -8,9 +8,10 @@ use App\Institute;
 
 class instituteController extends Controller {
 
-	    public function __construct() {
-	       
-	    }
+	public function __construct()
+	{
+		$this->middleware('admin');
+	}
 	/**
 	 * Display a listing of the resource.
 	 *

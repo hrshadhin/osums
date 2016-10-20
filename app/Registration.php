@@ -7,19 +7,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Registration extends Model
 {
-    protected $dates = ['created_at','updated_at'];
-      protected $table = 'registrations';
-    protected $fillable = [
-    'levelTerm',
-    'department_id',
-    'students_id',
-    'session'
+   use SoftDeletes;
+   protected $dates = ['created_at','updated_at'];
+   protected $table = 'registrations';
+   protected $fillable = [
+      'levelTerm',
+      'department_id',
+      'students_id',
+      'session'
    ];
 
-    public function department() {
-     return $this->belongsTo('App\Department','department_id');
+   public function department() {
+      return $this->belongsTo('App\Department','department_id');
    }
-    public function student() {
-     return $this->belongsTo('App\Student','students_id');
+   public function student() {
+      return $this->belongsTo('App\Student','students_id');
    }
 }

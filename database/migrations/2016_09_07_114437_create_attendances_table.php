@@ -22,6 +22,7 @@ class CreateAttendancesTable extends Migration
             $table->string('levelTerm',20);
             $table->tinyInteger('present')->default(0);
             $table->timestamps();
+            $table->softDeletes();
             $table->foreign('subject_id')
                          ->references('id')
                          ->on('subject');

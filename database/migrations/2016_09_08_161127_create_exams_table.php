@@ -25,6 +25,7 @@ class CreateExamsTable extends Migration
             $table->decimal('weight',6,2);
             $table->decimal('percentage_x_weight',6,2);
             $table->timestamps();
+            $table->softDeletes();
             $table->foreign('subject_id')
             ->references('id')
             ->on('subject');

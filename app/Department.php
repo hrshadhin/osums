@@ -13,7 +13,8 @@ class Department extends Model {
     parent::boot();
     static::deleting(function($department) {
       $department->subjects()->delete();
-      $department->fees()->delete();      
+      $department->books()->delete();
+      $department->fees()->delete();
       foreach ($department->students()->get() as $student) {
             $student->feeCollections()->delete();
       }
@@ -44,6 +45,9 @@ class Department extends Model {
   }
   public function fees() {
     return $this->hasMany('App\Fee','department_id');
+  }
+  public function books() {
+    return $this->hasMany('App\Book','department_id');
   }
 
 }

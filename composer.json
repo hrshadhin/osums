@@ -8,7 +8,8 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
         "laravelcollective/html": "5.2.*",
-        "spatie/laravel-fractal": "^1.9"
+        "spatie/laravel-fractal": "^1.9",
+        "picqer/php-barcode-generator": "^0.2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

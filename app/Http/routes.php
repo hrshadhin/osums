@@ -83,6 +83,68 @@ Route::group(['middleware' => 'auth'], function()
   Route::get('/fees-collection',[ 'as' => 'fees.collection.index','uses'=>'ReportController@cIndex']);
   Route::get('/fees-student/{stdId}',[ 'as' => 'fees.collection.studentfees','uses'=>'ReportController@studentFees']);
 
+  //library routes
+  Route::get('/library/addbook','libraryController@getAddbook');
+  Route::post('/library/addbook','libraryController@postAddbook');
+  Route::get('/library/view','libraryController@getviewbook');
+
+  Route::get('/library/view-show','libraryController@postviewbook');
+
+  Route::get('/library/edit/{id}','libraryController@getBook');
+  Route::post('/library/update','libraryController@postUpdateBook');
+  Route::get('/library/delete/{id}','libraryController@deleteBook');
+  Route::get('/library/issuebook','libraryController@getissueBook');
+
+  //check availabe book
+  Route::get('/library/issuebook-availabe/{code}/{quantity}','libraryController@checkBookAvailability');
+  Route::post('/library/issuebook','libraryController@postissueBook');
+
+  Route::get('/library/issuebookview','libraryController@getissueBookview');
+  Route::post('/library/issuebookview','libraryController@postissueBookview');
+  Route::get('/library/issuebookupdate/{id}','libraryController@getissueBookupdate');
+  Route::post('/library/issuebookupdate','libraryController@postissueBookupdate');
+  Route::get('/library/issuebookdelete/{id}','libraryController@deleteissueBook');
+
+  Route::get('/library/search','libraryController@getsearch');
+  Route::get('/library/search2','libraryController@getsearch');
+  Route::post('/library/search','libraryController@postsearch');
+  Route::post('/library/search2','libraryController@postsearch2');
+
+  Route::get('/library/reports','libraryController@getReports');
+  Route::get('/library/reports/fine','libraryController@getReportsFine');
+
+  Route::get('/library/reportprint/{do}','libraryController@Reportprint');
+  Route::get('/library/reports/fine/{month}','libraryController@ReportsFineprint');
+
+  //Hostel Routes
+  Route::get('/dormitory','dormitoryController@index');
+  Route::post('/dormitory/create','dormitoryController@create');
+  Route::get('/dormitory/edit/{id}','dormitoryController@edit');
+  Route::post('/dormitory/update','dormitoryController@update');
+  Route::get('/dormitory/delete/{id}','dormitoryController@delete');
+
+  Route::get('/dormitory/getstudents/{dormid}','dormitoryController@getstudents');
+
+  Route::get('/dormitory/assignstd','dormitoryController@stdindex');
+  Route::post('/dormitory/assignstd/create','dormitoryController@stdcreate');
+  Route::get('/dormitory/assignstd/list','dormitoryController@stdshow');
+  Route::post('/dormitory/assignstd/list','dormitoryController@poststdShow');
+  Route::get('/dormitory/assignstd/edit/{id}','dormitoryController@stdedit');
+  Route::post('/dormitory/assignstd/update','dormitoryController@stdupdate');
+  Route::get('/dormitory/assignstd/delete/{id}','dormitoryController@stddelete');
+
+  Route::get('/dormitory/fee','dormitoryController@feeindex');
+  Route::post('/dormitory/fee','dormitoryController@feeadd');
+  Route::get('/dormitory/fee/info/{regiNo}','dormitoryController@feeinfo');
+
+  Route::get('/dormitory/report/std','dormitoryController@reportstd');
+  Route::get('/dormitory/report/std/{dormId}','dormitoryController@reportstdprint');
+  Route::get('/dormitory/report/fee','dormitoryController@reportfee');
+  Route::get('/dormitory/report/fee/{dormId}/{month}','dormitoryController@reportfeeprint');
+
+  //barcode generate
+  Route::get('/barcode','barcodeController@index');
+  Route::post('/barcode','barcodeController@generate');
 
 
 });

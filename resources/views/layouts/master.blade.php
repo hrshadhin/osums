@@ -165,7 +165,7 @@
                     	<img src="/assets/images/users/user.png" alt="">{{Session::get('name')}}
                   <span class=" fa fa-angle-down"></span>
                 </a>
-                <ul class="dropdown-menu dropdown-usermenu pull-right">
+                <ul class="dropdown-menu dropdown-usermenu">
                   <li>
                     <a href="{{URL::route('user.settings')}}"><i class="glyphicon glyphicon-cog"></i> Settings</a>
                   </li>
@@ -178,6 +178,26 @@
                     <a href="{{URL::route('lock')}}"><i class="glyphicon  glyphicon-eye-close"></i> Lock Screen</a>
                   </li>
                   <li><a href="{{URL::route('user.logout')}}"><i class="glyphicon glyphicon-off"></i> Log Out</a></li>
+                </ul>
+              </li>
+              <li class="">
+                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  <span class=" fa fa-book"></span> Library
+                  <span class=" fa fa-angle-down"></span>
+                </a>
+                <ul class="dropdown-menu">
+
+                  <li><a href="/library/search"><i class="glyphicon glyphicon-search"></i> Book Search</a></li>
+                  <li><a href="/library/issuebook"><i class="glyphicon glyphicon-pencil"></i> Borrow Book</a></li>
+                  <li><a href="/library/issuebookview"><i class="glyphicon glyphicon-list"></i> Borrowd Book List</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/library/view-show"><i class="glyphicon glyphicon-list"></i> Book List</a></li>
+                  <li><a href="/library/addbook"><i class="glyphicon glyphicon-pencil"></i> Book Entry</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/barcode"><i class="fa fa-barcode"></i> Barcode Generate</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/library/reports"><i class="glyphicon glyphicon-print"></i> Reports</a></li>
+                  <li><a href="/library/reports/fine"><i class="glyphicon glyphicon-print"></i> Monthly Fine Reports</a></li>
                 </ul>
               </li>
 

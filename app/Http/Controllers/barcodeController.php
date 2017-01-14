@@ -46,7 +46,7 @@ class barcodeController extends Controller
                 $code=$request->get('code');
 
                 $barcodesc1=array();
-                for($i=1;$i<15;$i++)
+                for($i=1;$i<17;$i++)
                 {
 
                     $img=base64_encode($generator->getBarcode($code, $generator::TYPE_CODE_128));
@@ -55,7 +55,7 @@ class barcodeController extends Controller
                     $code+=1;
                 }
                 $barcodesc2=array();
-                for($i=1;$i<15;$i++)
+                for($i=1;$i<17;$i++)
                 {
 
                     $img=base64_encode($generator->getBarcode($code, $generator::TYPE_CODE_128));
@@ -65,7 +65,7 @@ class barcodeController extends Controller
                     $code+=1;
                 }
                 $barcodesc3=array();
-                for($i=1;$i<15;$i++)
+                for($i=1;$i<17;$i++)
                 {
 
                     $img=base64_encode($generator->getBarcode($code, $generator::TYPE_CODE_128));

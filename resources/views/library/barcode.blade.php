@@ -7,7 +7,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #FAFAFA;
-    font: 12pt "Tahoma";
+    font-size: 12px;
 }
 * {
     box-sizing: border-box;

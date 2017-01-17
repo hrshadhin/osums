@@ -6,9 +6,21 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\Controller;
+use DB;
+use App\Department;
+use App\Book;
+use App\Student;
 
 class libraryController extends Controller
 {
+	protected $semesters=[
+			'L1T1' => 'First Year 1st Semester',
+			'L1T2' => 'First Year 2nd Semester',
+			'L2T1' => 'Second Year 1st Semester',
+			'L2T2' => 'Second Year 2nd Semester',
+			'L3T1' => 'Third Year 1st Semester',
+			'L3T2' => 'Third Year 2nd Semester'
+	];
 	public function __construct()
     {
         $this->middleware('teacher');
@@ -16,8 +28,8 @@ class libraryController extends Controller
 
 	public function getAddbook()
 	{
-		$classes = array('All'=>'All')+ClassModel::lists('name','code');
-		return view('library.addbook',compact('classes'));
+		$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+		return view('library.addbook',compact('departments'));
 	}
 
 
@@ -26,43 +38,37 @@ class libraryController extends Controller
 	*
 	* @return Response
 	*/
-	public function postAddbook()
+	public function postAddbook(Request $request)
 	{
 		$rules=[
-			'code' => 'required|max:50',
+			'code' => 'required|max:50|unique:books,code',
 			'title' => 'required|max:250',
 			'author' => 'required|max:100',
 			'type' => 'required',
-			'class' => 'required'
+			'department' => 'required'
 		];
-		$validator = \Validator::make(Input::all(), $rules);
+		$validator = \Validator::make($request->all(), $rules);
 		if ($validator->fails())
 		{
 			return Redirect::to('/library/addbook')->withErrors($validator)->withInput();
 		}
 		else {
-			$book=AddBook::select('*')->where('code',Input::get('code'))->get();
-			if(count($book)>0)
-			{
-				$errorMessages = new Illuminate\Support\MessageBag;
-				$errorMessages->add('deplicate', 'Book Code allready exists!!');
-				return Redirect::to('/library/addbook')->withInput()->withErrors($errorMessages);
-			}
-			else {
-				$book = new AddBook();
-				$book->code = Input::get('code');
-				$book->title = Input::get('title');
-				$book->author = Input::get('author');
-				$book->quantity = Input::get('quantity');
-				$book->rackNo = Input::get('rackNo');
-				$book->rowNo = Input::get('rowNo');
-				$book->type = Input::get('type');
-				$book->class = Input::get('class');
-				$book->desc = Input::get('desc');
-				$book->save();
-				return Redirect::to('/library/addbook')->with("success", "Book added to library Succesfully.");
 
-			}
+				$book = new Book();
+				$book->code = $request->get('code');
+				$book->title = $request->get('title');
+				$book->author = $request->get('author');
+				$book->quantity = $request->get('quantity');
+				$book->rackNo = $request->get('rackNo');
+				$book->rowNo = $request->get('rowNo');
+				$book->type = $request->get('type');
+				$book->department_id = $request->get('department');
+				$book->desc = $request->get('desc');
+				$book->save();
+				$notification= array('title' => 'Data Store', 'body' => 'Book added succesfully.');
+				return Redirect::to('/library/addbook')->with("success", $notification);
+
+
 		}
 
 	}
@@ -73,42 +79,22 @@ class libraryController extends Controller
 	*
 	* @return Response
 	*/
-	public function getviewbook()
+	public function getviewbook(Request $request)
 	{
-		$classes = array('All'=>'All')+ClassModel::lists('name','code');
-		$formdata = new formfoo;
-		$formdata->class = "";
-		$books=array();
-		return view('library.booklist',compact('classes','formdata','books'));
-	}
-	public function postviewbook()
-	{
-
-		if(Input::get('classcode')=="All"){
-			$books=AddBook::leftJoin('Class', function($join) {
-				$join->on('Books.class', '=', 'Class.code');
-			})
-			->select('Books.id', 'Books.code', 'Books.title', 'Books.author','Books.quantity','Books.rackNo','Books.rowNo','Books.type','Books.desc',DB::raw("IFNULL(Class.Name,'All') as class"))
-
-			->orderBy('id', 'desc')->paginate(50);
-
+		$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+		$department = "";
+		if($request->has('department')){
+			$department = $request->get('department');
 		}
-		else {
+		$books = DB::table('books')
+		->join('department', 'books.department_id', '=', 'department.id')
+		->select('books.id', 'books.code', 'books.title', 'books.author','books.quantity','books.rackNo','books.rowNo','books.type','books.desc','department.name as department')
+		->where('books.department_id',$department)
+		->where('books.deleted_at',NULL)
+		->paginate(50);
 
-			$books = DB::table('Books')
-			->join('Class', 'Books.class', '=', 'Class.code')
-			->select('Books.id', 'Books.code', 'Books.title', 'Books.author','Books.quantity','Books.rackNo','Books.rowNo','Books.type','Books.desc','Class.Name as class')
-			->where('Books.class',Input::get('classcode'))->orderBy('id', 'desc')->paginate(50);
-		}
-
-		$books->setBaseUrl('view-show');
-		$classes = array('All' => 'All')+ClassModel::lists('name','code');
-		$formdata = new formfoo;
-		$formdata->class = Input::get('classcode');
-		return view('library.booklist',compact('classes','formdata','books'));
-
+		return view('library.booklist',compact('departments','department','books'));
 	}
-
 
 	/**
 	* Display the specified resource.
@@ -118,9 +104,9 @@ class libraryController extends Controller
 	*/
 	public function getBook($id)
 	{
-		$classes = array('All' => 'All')+ClassModel::lists('name','code');
-		$book= AddBook::select('*')->find($id);
-		return view('library.bookedit',compact('classes','book'));
+		$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+		$book= Book::select('*')->find($id);
+		return view('library.bookedit',compact('departments','book'));
 	}
 
 
@@ -130,34 +116,35 @@ class libraryController extends Controller
 	* @param  int  $id
 	* @return Response
 	*/
-	public function postUpdateBook()
+	public function postUpdateBook(Request $request)
 	{
 		$rules=[
-			'code' => 'required|max:50',
+			//'code' => 'required|max:50',
 			'title' => 'required|max:250',
 			'author' => 'required|max:100',
 			'type' => 'required',
-			'class' => 'required'
+			'department' => 'required'
 		];
-		$validator = \Validator::make(Input::all(), $rules);
+		$validator = \Validator::make($request->all(), $rules);
 		if ($validator->fails())
 		{
-			return Redirect::to('/library/edit/'.Input::get('id'))->withErrors($validator)->withInput();
+			return Redirect::to('/library/edit/'.$request->get('id'))->withErrors($validator)->withInput();
 		}
 		else {
 
-			$book = AddBook::find(Input::get('id'));
-			//$book->code = Input::get('code');
-			$book->title = Input::get('title');
-			$book->author = Input::get('author');
-			$book->quantity = Input::get('quantity');
-			$book->rackNo = Input::get('rackNo');
-			$book->rowNo = Input::get('rowNo');
-			$book->type = Input::get('type');
-			$book->class = Input::get('class');
-			$book->desc = Input::get('desc');
+			$book = Book::find($request->get('id'));
+			//$book->code = $request->get('code');
+			$book->title = $request->get('title');
+			$book->author = $request->get('author');
+			$book->quantity = $request->get('quantity');
+			$book->rackNo = $request->get('rackNo');
+			$book->rowNo = $request->get('rowNo');
+			$book->type = $request->get('type');
+			$book->department_id = $request->get('department');
+			$book->desc = $request->get('desc');
 			$book->save();
-			return Redirect::to('/library/view')->with("success", "Book updated Succesfully.");
+			$notification= array('title' => 'Data Update', 'body' => 'Book updated succesfully.');
+			return Redirect::to('/library/view')->with("success",$notification);
 
 		}
 
@@ -172,16 +159,20 @@ class libraryController extends Controller
 	*/
 	public function deleteBook($id)
 	{
-		$book = AddBook::find($id);
+		$book = Book::find($id);
 		$book->delete();
-		return Redirect::to('/library/view')->with("success", "Book Deleted Succesfully.");
+		$notification= array('title' => 'Data Delete', 'body' => 'Book deleted succesfully.');
+		return Redirect::to('/library/view')->with("success", $notification);
 	}
 
 	public function getissueBook()
 	{
-		$students =['' => 'Select Student']+Student::select(DB::raw("CONCAT(firstName,' ',middleName,' ',lastName,'[',regiNo,']') as name,regiNo"))->lists('name','regiNo');
-		$books = ['' => 'Select Book']+AddBook::select(DB::raw("CONCAT(title,'[',author,']') as name,code"))->lists('name','code');
-		return view('library.bookissue',compact('students','books'));
+		$semesters = $this->semesters;
+		$students=[];
+		$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+		$sessions=Student::select('session','session')->distinct()->lists('session','session');
+		$books = Book::select(DB::raw("CONCAT(title,'[',author,']#',code) as name,id"))->lists('name','id');
+		return view('library.bookissue',compact('students','semesters','departments','sessions','','books'));
 	}
 
 	public function postissueBook()
@@ -195,7 +186,7 @@ class libraryController extends Controller
 			'returnDate' => 'required',
 
 		];
-		$validator = \Validator::make(Input::all(), $rules);
+		$validator = \Validator::make($request->all(), $rules);
 		if ($validator->fails())
 		{
 			return Redirect::to('/library/issuebook')->withErrors($validator)->withInput();
@@ -203,16 +194,16 @@ class libraryController extends Controller
 		else {
 
 
-			/*$availabeQuantity=DB::table('bookStock')->select('quantity')->where('code',Input::get('code'))->first();
+			/*$availabeQuantity=DB::table('bookStock')->select('quantity')->where('code',$request->get('code'))->first();
 
-			if(Input::get('quantity')>$availabeQuantity->quantity)
+			if($request->get('quantity')>$availabeQuantity->quantity)
 			{
 			$errorMessages = new Illuminate\Support\MessageBag;
 			$errorMessages->add('deplicate', 'This book quantity not availabe right now!');
 			return Redirect::to('/library/issuebook')->withErrors($errorMessages)->withInput();
 
 		}*/
-		$data=Input::all();
+		$data=$request->all();
 		$issueData = [];
 		$now=\Carbon\Carbon::now();
 		foreach ($data['bookCode'] as $key => $value){
@@ -230,14 +221,14 @@ class libraryController extends Controller
 		}
 		Issuebook::insert($issueData);
 		/*  $issuebook = new Issuebook();
-		$issuebook->code = Input::get('code');
-		$issuebook->quantity = Input::get('quantity');
-		$issuebook->regiNo = Input::get('regiNo');
-		$issuebook->issueDate = $this->parseAppDate(Input::get('issueDate'));
-		$issuebook->returnDate = $this->parseAppDate(Input::get('returnDate'));
-		$issuebook->fine = Input::get('fine');
+		$issuebook->code = $request->get('code');
+		$issuebook->quantity = $request->get('quantity');
+		$issuebook->regiNo = $request->get('regiNo');
+		$issuebook->issueDate = $this->parseAppDate($request->get('issueDate'));
+		$issuebook->returnDate = $this->parseAppDate($request->get('returnDate'));
+		$issuebook->fine = $request->get('fine');
 		$issuebook->save();*/
-		return Redirect::to('/library/issuebook')->with("success","Succesfully book borrowed for '".Input::get('regiNo')."'.");
+		return Redirect::to('/library/issuebook')->with("success","Succesfully book borrowed for '".$request->get('regiNo')."'.");
 
 	}
 
@@ -250,20 +241,20 @@ public function getissueBookview()
 public function postissueBookview()
 {
 
-	if(Input::get('status')!="")
+	if($request->get('status')!="")
 	{
 		$books = Issuebook::select('*')
-		->Where('Status','=',Input::get('status'))
+		->Where('Status','=',$request->get('status'))
 		->get();
 		return view('library.bookissueview',compact('books'));
 	}
-	if(Input::get('regiNo')!="" || Input::get('code') !="" || Input::get('issueDate') !="" || Input::get('returnDate') !="")
+	if($request->get('regiNo')!="" || $request->get('code') !="" || $request->get('issueDate') !="" || $request->get('returnDate') !="")
 	{
 
-		$books = Issuebook::select('*')->where('regiNo','=',Input::get('regiNo'))
-		->orWhere('code','=',Input::get('code'))
-		->orWhere('issueDate','=',$this->parseAppDate(Input::get('issueDate')))
-		->orWhere('returnDate','=',$this->parseAppDate(Input::get('returnDate')))
+		$books = Issuebook::select('*')->where('regiNo','=',$request->get('regiNo'))
+		->orWhere('code','=',$request->get('code'))
+		->orWhere('issueDate','=',$this->parseAppDate($request->get('issueDate')))
+		->orWhere('returnDate','=',$this->parseAppDate($request->get('returnDate')))
 
 		->get();
 		return view('library.bookissueview',compact('books'));
@@ -291,20 +282,20 @@ public function postissueBookupdate()
 		'status' => 'required',
 
 	];
-	$validator = \Validator::make(Input::all(), $rules);
+	$validator = \Validator::make($request->all(), $rules);
 	if ($validator->fails())
 	{
-		return Redirect::to('/library/issuebookupdate/'.Input::get('id'))->withErrors($validator);
+		return Redirect::to('/library/issuebookupdate/'.$request->get('id'))->withErrors($validator);
 	}
 	else {
 
-		$book = Issuebook::find(Input::get('id'));
-		$book->code = Input::get('code');
-		$book->regiNo = Input::get('regiNo');
-		$book->issueDate = $this->parseAppDate(Input::get('issueDate'));
-		$book->returnDate = $this->parseAppDate(Input::get('returnDate'));
-		$book->fine = Input::get('fine');
-		$book->Status = Input::get('status');
+		$book = Issuebook::find($request->get('id'));
+		$book->code = $request->get('code');
+		$book->regiNo = $request->get('regiNo');
+		$book->issueDate = $this->parseAppDate($request->get('issueDate'));
+		$book->returnDate = $this->parseAppDate($request->get('returnDate'));
+		$book->fine = $request->get('fine');
+		$book->Status = $request->get('status');
 		$book->save();
 		return Redirect::to('/library/issuebookview')->with("success","Succesfully book record updated.");
 
@@ -319,29 +310,42 @@ public function deleteissueBook($id)
 }
 public function getsearch()
 {
-	$classes = array('All' => 'All')+ClassModel::lists('name','code');
-	return view('library.booksearch',compact('classes'));
+	$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+	$inputs = [
+		"code"=>"",
+		"title"=>"",
+		"author"=>"",
+		"type"=>"",
+		"department"=>""
+	];
+	return view('library.booksearch',compact('departments','inputs'));
 }
-public function postsearch()
+public function postsearch(Request $request)
 {
-	if(Input::get('code')!="" || Input::get('title')!="" || Input::get('author') !="")
+	if($request->get('code')!="" || $request->get('title')!="" || $request->get('author') !="")
 	{
-		$query=AddBook::leftJoin('Class', function($join) {
-			$join->on('Books.class', '=', 'Class.code');
+		$query=Book::leftJoin('department', function($join) {
+			$join->on('books.department_id', '=', 'department.id');
 
 		})
-		->join('bookStock','Books.code', '=', 'bookStock.code')
-		->select('Books.id', 'Books.code', 'Books.title', 'Books.author','bookStock.quantity','Books.rackNo','Books.rowNo','Books.type','Books.desc',DB::raw("IFNULL			(Class.Name,'All') as class"));
-		if(Input::get('code')!="") $query->where('Books.code','=',Input::get('code'));
-		if(Input::get('title')!="")$query->orWhere('Books.title','LIKE','%'.Input::get('title').'%');
-		if(Input::get('author') !="")$query->orWhere('Books.author','LIKE','%'.Input::get('author').'%');
+		->leftJoin('stock_books','books.id', '=', 'stock_books.books_id')
+		->select('books.id', 'books.code', 'books.title', 'books.author','stock_books.quantity','books.rackNo','books.rowNo','books.type','books.desc','department.name');
+		if($request->get('code')!="") $query->where('books.code','=',$request->get('code'));
+		if($request->get('title')!="")$query->orWhere('books.title','LIKE','%'.$request->get('title').'%');
+		if($request->get('author') !="")$query->orWhere('books.author','LIKE','%'.$request->get('author').'%');
 
 
 		$books=$query->get();
 
-
-		$classes = array('All' => 'All')+ClassModel::lists('name','code');
-		return view('library.booksearch',compact('books','classes'));
+		$inputs = [
+			"code" => $request->get('code'),
+			"title" => $request->get('title'),
+			"author" => $request->get('author'),
+			"type" => "",
+			"department" => ""
+		];
+		$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+		return view('library.booksearch',compact('books','departments','inputs'));
 
 	}
 	else {
@@ -350,41 +354,38 @@ public function postsearch()
 
 	}
 }
-public function postsearch2()
+public function postsearch2(Request $request)
 {
 	$rules=[
 		'type' => 'required',
-		'class' => 'required',
+		'department' => 'required',
 
 
 	];
-	$validator = \Validator::make(Input::all(), $rules);
+	$validator = \Validator::make($request->all(), $rules);
 	if ($validator->fails())
 	{
 		return Redirect::to('/library/search')->withErrors($validator);
 	}
 	else {
-		if(Input::get('class')=="All"){
-			$books=AddBook::leftJoin('Class', function($join) {
-				$join->on('Books.class', '=', 'Class.code');
-			})
-			->join('bookStock','Books.code', '=', 'bookStock.code')
-			->select('Books.id', 'Books.code', 'Books.title', 'Books.author','bookStock.quantity','Books.rackNo','Books.rowNo','Books.type','Books.desc',DB::raw("IFNULL(Class.Name,'All') as class"))
-			->where('Books.type',Input::get('type'))
-			->get();
+			$books = DB::table('books')
+			->join('department', 'books.department_id', '=', 'department.id')
+			->join('stock_books','books.id', '=', 'stock_books.books_id')
+			->select('books.id', 'books.code', 'books.title', 'books.author','stock_books.quantity','books.rackNo','books.rowNo','books.type','books.desc','department.name')
+			->where('books.department_id',$request->get('department'))
+			->where('books.type',$request->get('type'))->get();
 
-		}
-		else {
 
-			$books = DB::table('Books')
-			->join('Class', 'Books.class', '=', 'Class.code')
-			->join('bookStock','Books.code', '=', 'bookStock.code')
-			->select('Books.id', 'Books.code', 'Books.title', 'Books.author','bookStock.quantity','Books.rackNo','Books.rowNo','Books.type','Books.desc','Class.Name as class')
-			->where('Books.class',Input::get('class'))
-			->where('Books.type',Input::get('type'))->get();
-		}
-		$classes = array('All' => 'All')+ClassModel::lists('name','code');
-		return view('library.booksearch',compact('books','classes'));
+				$inputs = [
+					"code" => "",
+					"title" => "",
+					"author" => "",
+					"type" => $request->get('type'),
+					"department" => $request->get('department')
+				];
+				$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+				return view('library.booksearch',compact('books','departments','inputs'));
+
 
 	}
 }
@@ -401,9 +402,9 @@ public function Reportprint($do)
 	{
 		$todayReturn = DB::table('issueBook')
 		->join('Student', 'Student.regiNo', '=', 'issueBook.regiNo')
-		->join('Books','Books.code','=','issueBook.code')
-		->join('Class','Class.code','=','Student.class')
-		->select('Books.title', 'Books.author','Books.type','issueBook.quantity','issueBook.fine','Student.firstName','Student.middleName','Student.lastName','Student.rollNo','Class.name as class')
+		->join('Books','books.code','=','issueBook.code')
+		->join('Class','class.code','=','Student.class')
+		->select('books.title', 'books.author','books.type','issueBook.quantity','issueBook.fine','Student.firstName','Student.middleName','Student.lastName','Student.rollNo','class.name as class')
 		->where('issueBook.returnDate',date('Y-m-d'))
 		->where('issueBook.Status','Borrowed')
 		->get();
@@ -419,9 +420,9 @@ public function Reportprint($do)
 	{
 		$expires = DB::table('issueBook')
 		->join('Student', 'Student.regiNo', '=', 'issueBook.regiNo')
-		->join('Books','Books.code','=','issueBook.code')
-		->join('Class','Class.code','=','Student.class')
-		->select('Books.title', 'Books.author','Books.type','issueBook.quantity','issueBook.fine','Student.firstName','Student.middleName','Student.lastName','Student.rollNo','Class.name as class')
+		->join('Books','books.code','=','issueBook.code')
+		->join('Class','class.code','=','Student.class')
+		->select('books.title', 'books.author','books.type','issueBook.quantity','issueBook.fine','Student.firstName','Student.middleName','Student.lastName','Student.rollNo','class.name as class')
 		->where('issueBook.returnDate','<',date('Y-m-d'))
 		->where('issueBook.Status','Borrowed')
 		->get();

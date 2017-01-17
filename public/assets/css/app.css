@@ -68,3 +68,6 @@ float: right;
 .top-25{
   top:-25px !important;
 }
+#datatable-buttons_info{
+  display: none;
+}

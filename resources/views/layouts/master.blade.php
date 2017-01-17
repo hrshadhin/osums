@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html> -->
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -15,10 +15,10 @@
     <link href="{{ URL::asset('assets/css/jquery.mCustomScrollbar.min.css')}}" rel="stylesheet">
     <link href="{{ URL::asset('assets/css/pnotify.css')}}" rel="stylesheet">
     <link href="{{ URL::asset('assets/css/pnotify.buttons.css')}}" rel="stylesheet">
-    @yield("extrastyle")
     <!-- Custom Theme Style -->
 		<link href="{{ URL::asset('assets/css/custom.min.css')}}" rel="stylesheet">
 		<link href="{{ URL::asset('assets/css/app.css')}}" rel="stylesheet">
+    @yield("extrastyle")
 
   </head>
 
@@ -191,7 +191,7 @@
                   <li><a href="/library/issuebook"><i class="glyphicon glyphicon-pencil"></i> Borrow Book</a></li>
                   <li><a href="/library/issuebookview"><i class="glyphicon glyphicon-list"></i> Borrowd Book List</a></li>
                   <li class="divider"></li>
-                  <li><a href="/library/view-show"><i class="glyphicon glyphicon-list"></i> Book List</a></li>
+                  <li><a href="/library/view"><i class="glyphicon glyphicon-list"></i> Book List</a></li>
                   <li><a href="/library/addbook"><i class="glyphicon glyphicon-pencil"></i> Book Entry</a></li>
                   <li class="divider"></li>
                   <li><a href="/barcode"><i class="fa fa-barcode"></i> Barcode Generate</a></li>

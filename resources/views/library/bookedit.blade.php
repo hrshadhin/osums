@@ -1,9 +1,12 @@
+
 @extends('layouts.master')
 
-@section('title', 'Add Book')
+@section('title', 'Library')
 
-
+@section('extraStyle')
+@endsection
 @section('content')
+
 <!-- page content -->
 <div class="right_col" role="main">
   <div class="">
@@ -14,11 +17,12 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Books<small> Add new book</small></h2>
+            <h2>Book<small> update book information.</small></h2>
 
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
+
             <div class="row">
               <div class="col-md-12">
                 @if (count($errors) > 0)
@@ -33,9 +37,10 @@
                 @endif
               </div>
             </div>
-
-            <form role="form" action="/library/addbook" method="post">
+            @if(isset($book))
+            <form role="form" action="/library/update" method="post">
               <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="id" value="{{$book->id }}">
 
               <div class="row">
                 <div class="col-md-12">
@@ -44,8 +49,7 @@
                       <label for="name">Code/ISBN No</label>
                       <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign blue"></i></span>
-                        {{ Form::text('code','',['class'=>'form-control','required'=>'true','placeholder'=>'Book Code'])}}
-
+                        <input type="text" readonly="true" class="form-control" required name="code"  value="{{$book->code}}">
                       </div>
                     </div>
                   </div>
@@ -54,7 +58,7 @@
                       <label for="name">Title/Name</label>
                       <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign blue"></i></span>
-                        {{ Form::text('title','',['class'=>'form-control','required'=>'true','placeholder'=>'Book Name']) }}
+                        <input type="text" class="form-control" required name="title" value="{{$book->title}}">
                       </div>
                     </div>
                   </div>
@@ -71,8 +75,7 @@
 
                       <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign  blue"></i></span>
-                        {{ Form::text('author','',['class'=>'form-control','required'=>'true','placeholder'=>'Writer Name']) }}
-
+                        <input type="text" class="form-control" required name="author" value="{{$book->author}}">
                       </div>
                     </div>
                   </div>
@@ -81,8 +84,7 @@
                       <label class="control-label" for="rack">Quantity</label>
                       <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign  blue"></i></span>
-                        {{ Form::text('quantity','',['class'=>'form-control','required'=>'true','placeholder'=>'How many?']) }}
-
+                        <input type="text" class="form-control"  name="quantity" value="{{$book->quantity}}">
                       </div>
                     </div>
                   </div>
@@ -91,8 +93,7 @@
                       <label class="control-label" for="rack">Rack No</label>
                       <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign  blue"></i></span>
-                        {{ Form::text('rackNo','',['class'=>'form-control','placeholder'=>'Rack No']) }}
-
+                        <input type="text" class="form-control"  name="rackNo" value="{{$book->rackNo}}">
                       </div>
                     </div>
                   </div>
@@ -101,7 +102,7 @@
                       <label class="control-label" for="row">Row No</label>
                       <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign  blue"></i></span>
-                        {{ Form::text('rowNo','',['class'=>'form-control','placeholder'=>'Row No']) }}
+                        <input type="text" class="form-control"  name="rowNo" value="{{$book->rowNo}}">
                       </div>
                     </div>
                   </div>
@@ -114,18 +115,18 @@
                       <label class="control-label" for="type">Type</label>
                       <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign  blue"></i></span>
-                        {{ Form::select('type',['Academic'=>'Academic','Story'=>'Story','Magazine'=>'Magazine','Other'=>'Other'],null,['class'=>'form-control'])}}
+                        {{ Form::select('type',['Academic'=>'Academic','Story'=>'Story','Magazine'=>'Magazine','Other'=>'Other'],$book->type,['class'=>'form-control'])}}
+
                       </div>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label class="control-label" for="class">Class</label>
+                      <label class="control-label" for="class">Department</label>
 
                       <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-home blue"></i></span>
-                        {!! Form::select('department',$departments,null,['class'=>'form-control select2_single','required'=>'true']) !!}
-
+                        {{ Form::select('department',$departments,$book->department_id,['class'=>'form-control'])}}
                       </div>
                     </div>
                   </div>
@@ -134,12 +135,10 @@
                       <label class="control-label" for="dec">Description</label>
                       <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign  blue"></i></span>
-
-                        {{ Form::textarea('desc','',['class'=>'form-control','placeholder'=>'Description No','rows'=>'3']) }}
+                        <textarea class="form-control"  name="desc" >{{$book->desc}} </textarea>
                       </div>
                     </div>
                   </div>
-
                 </div>
               </div>
 
@@ -148,11 +147,17 @@
               <div class="row">
                 <div class="col-md-12">
 
-                  <button class="btn btn-primary pull-right" type="submit"><i class="glyphicon glyphicon-plus"></i>Add</button>
+                  <button class="btn btn-primary pull-right" type="submit"><i class="glyphicon glyphicon-plus"></i>Update</button>
 
                 </div>
               </div>
             </form>
+            @else
+            <div class="alert alert-danger">
+              <strong>There is no book!!</strong>
+            </div>
+            @endif
+
 
           </div>
         </div>

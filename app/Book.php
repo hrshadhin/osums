@@ -9,7 +9,7 @@ class Book extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'Books';
+    protected $table = 'books';
     protected $fillable = [
         'code',
         'title',

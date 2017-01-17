@@ -160,7 +160,7 @@
       });
 
       //get students lists
-      $('#session').focusout(function (){
+      $('#session').on('change',function (){
          var dept= $('#department_id').val();
          var session = $(this).val();
          if(!dept){

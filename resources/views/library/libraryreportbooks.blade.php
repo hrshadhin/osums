@@ -5,7 +5,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <style>
-
+@media print {
+ @page { margin: 0; }
+ body { margin: 1.6cm; }
+}
 .bg{
  width: 100%;
  background-color:#dcdcdc;
@@ -79,7 +82,7 @@ left:0;
     <tr>
     <td class="lefthead">
 
-     <img class="logo" src="./img/logo.png">
+     <img class="logo" src="{{url('/')}}/assets/images/logo.jpg">
     </td>
 
    <td class="righthead">
@@ -98,7 +101,7 @@ left:0;
    <tr><td>
     Library Report
   </td>
-  <td><strong>{{$rdata['name']}}</strong></td>
+  <td>Category: <strong>{{$rdata['name']}}</strong></td>
   <td >
 
   </td>
@@ -125,7 +128,7 @@ left:0;
             <td>{{$data->title}}</td>
             <td>{{$data->code}}</td>
             <td>{{$data->author}}</td>
-            <td>{{$data->quantity}}</td>
+            <td>{{$data->stock->quantity}}</td>
 
             <td>{{$data->rackNo}}</td>
             <td>{{$data->rowNo}}</td>
@@ -147,7 +150,10 @@ left:0;
 </table>
 
 <div id="footer">
-  <p>Print Date: {{date('d/m/Y')}}</p>
+  <p style="padding-left:50px;">Print Date: {{date('d/m/Y')}}</p>
 </div>
+<script type="text/javascript">
+  window.print();
+</script>
 </body>
 </html>

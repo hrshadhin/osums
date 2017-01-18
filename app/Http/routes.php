@@ -96,7 +96,7 @@ Route::group(['middleware' => 'auth'], function()
   Route::get('/library/issuebook','libraryController@getissueBook');
 
   //check availabe book
-  Route::get('/library/issuebook-availabe/{code}/{quantity}','libraryController@checkBookAvailability');
+  Route::get('/library/issuebook-availabe/{books_id}/{quantity}','libraryController@checkBookAvailability');
   Route::post('/library/issuebook','libraryController@postissueBook');
 
   Route::get('/library/issuebookview','libraryController@getissueBookview');

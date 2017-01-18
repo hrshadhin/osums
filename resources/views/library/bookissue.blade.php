@@ -42,14 +42,14 @@
 								@endif
 							</div>
 						</div>
-						<form class="form-horizontal form-label-left" novalidate method="post" action="{{URL::route('student.registration.store')}}">
+						<form class="form-horizontal form-label-left" method="post" action="/library/issuebook" enctype="multipart/form-data">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 							<div class="row">
 								<div class="col-md-3">
 									<div class="item form-group">
 										<label for="department">Department <span class="required">*</span>
 										</label>
-											{!!Form::select('department_id', $departments, null, ['placeholder' => 'Pick a department','class'=>'select2_single department form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required','id'=>'department_id'])!!}
+											{!!Form::select('', $departments, null, ['placeholder' => 'Pick a department','class'=>'select2_single department form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required','id'=>'department_id'])!!}
 											<span class="text-danger">{{ $errors->first('department_id') }}</span>
 									</div>
 								</div>
@@ -58,7 +58,7 @@
 										<label for="session">Session <span class="required">*</span>
 										</label>
 
-											{!!Form::select('session', $sessions, null, ['placeholder' => 'Pick a Session','class'=>'select2_single session form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required' ,'id'=>'session'])!!}
+											{!!Form::select('', $sessions, null, ['placeholder' => 'Pick a Session','class'=>'select2_single session form-control col-md-7 col-xs-12 has-feedback-left','required'=>'required' ,'id'=>'session'])!!}
 											<span class="text-danger">{{ $errors->first('session') }}</span>
 										 </div>
 									</div>
@@ -67,7 +67,7 @@
 											 <label class="control-label" for="levelTerm">Semester <span class="required">*</span>
 											 </label>
 
-											 {!!Form::select('levelTerm', $semesters, null, ['placeholder' => 'Pick a Semester','class'=>'select2_single semester form-control col-md-7 col-xs-12 has-feedback-left', 'id'=>'levelTerm','required'=>'required'])!!}
+											 {!!Form::select('', $semesters, null, ['placeholder' => 'Pick a Semester','class'=>'select2_single semester form-control col-md-7 col-xs-12 has-feedback-left', 'id'=>'levelTerm','required'=>'required'])!!}
 											 <span class="text-danger">{{ $errors->first('levelTerm') }}</span>
 
 										</div>
@@ -86,13 +86,13 @@
 											<label for="idate">Issue Date</label>
 											<div class="input-group">
 												<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i> </span>
-												<input class="form-control datepicker" id="returnDate" name="issueDate" required />
+												<input class="form-control datepicker"  name="issueDate" required="required" />
 
 											</div>
 										</div>
 									</div>
 									</div>
-								</div>
+
 								<hr class="hrclass">
 								<div class="row">
 									<div class="col-md-12">
@@ -101,7 +101,7 @@
 												<label for="name">Book Name/Author Name</label>
 												<div class="input-group">
 													<span class="input-group-addon"><i class="glyphicon glyphicon-book blue"></i></span>
-													{{ Form::select('code',$books,null,['id' => 'bookCode','class'=>'form-control select2-list'])}}
+													{{ Form::select('',$books,null,['id' => 'bookCode','class'=>'form-control select2-list'])}}
 
 												</div>
 											</div>
@@ -110,7 +110,7 @@
 											<div class="form-group">
 												<label class="control-label" for="rack">Quantity</label>
 
-												<input type="text" id="quantity" class="form-control" name="quantity"   placeholder="1">
+												<input type="text" id="quantity" class="form-control" placeholder="1">
 
 											</div>
 
@@ -122,7 +122,7 @@
 												<div class="input-group">
 
 													<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i> </span>
-													<input class="form-control datepicker" id="returnDate" name="returnDate" value="" />
+													<input class="form-control datepicker" id="returnDate" value="" />
 
 												</div>
 
@@ -132,7 +132,7 @@
 										<div class="col-md-1">
 											<div class="form-group">
 												<label class="control-label" for="fine">Fine</label>
-												<input type="text" id="fine" class="form-control" value="0.00"  name="fine" placeholder="Fine Amount">
+												<input type="text" id="fine" class="form-control" value="0.00"  placeholder="Fine Amount">
 
 											</div>
 										</div>
@@ -183,6 +183,9 @@
 
 						</div>
 					</div>
+						</div>
+					</div>
+		
 					<!-- /page content -->
 					@endsection
 					@section('extrascript')
@@ -262,7 +265,7 @@
 						btnSaveIsvisibale();
 						$('select#bookCode').select2().select2("val", '');
 						$('#quantity').val('');
-						$('#returnDate').val('');
+						//$('#returnDate').val('');
 						$('#fine').val('0.0');
 
 					};
@@ -280,43 +283,17 @@
 							var submit = true;
 							// evaluate the form using generic validaing
 							if (!validator.checkAll($(this))) {
+								new PNotify({
+											title: 'Validation Faild!',
+											text: 'Fill up form correctly.',
+											type: 'error',
+											styling: 'bootstrap3'
+								});
 								submit = false;
 							}
 
 							if (submit){
-								var data= $('form').serialize();
-								var postURL = this.action;
-								$.ajax({
-									url: postURL,
-									type: 'post',
-									dataType: 'json',
-									data: data,
-									success: function(data) {
-										//console.log(data);
-										new PNotify({
-											title: data.message.title,
-											text: data.message.body,
-											type: 'success',
-											styling: 'bootstrap3'
-										});
-										$(".student").val('').trigger('change');
-										$(".semester").val('').trigger('change');
-
-
-									},
-									error: function(data){
-										var respone = JSON.parse(data.responseText);
-										$.each(respone.message, function( key, value ) {
-											new PNotify({
-												title: 'Error!',
-												text: value,
-												type: 'error',
-												styling: 'bootstrap3'
-											});
-										});
-
-									}
-								});
+								this.submit();
 							}
 
 
@@ -328,8 +305,12 @@
 						$('.datepicker').daterangepicker({
 				       singleDatePicker: true,
 				       calender_style: "picker_1",
-				       format:'D/M/YYYY'
-				    });
+				       format:'DD/MM/YYYY'
+				    },
+						function(start,end){
+							//console.log(start.format('DD/MM/YYYY'));
+							$('#returnDate').val(start.format('DD/MM/YYYY'));
+						});
 						$(".department").select2({
 							placeholder: "Pick a department",
 							allowClear: true
@@ -390,7 +371,7 @@
 									});
 							 }
 						 });
-						btnSaveIsvisibale();
+					//	btnSaveIsvisibale();
 						$('select').select2();
 						//add fee to grid
 						$( "#btnAddRow" ).click(function() {

@@ -22,7 +22,7 @@ class Book extends Model
     ];
 
     public function stock() {
-        return $this->hasOne('App\StockBook');
+        return $this->hasOne('App\StockBook','books_id');
     }
     public function borrow() {
         return $this->hasMany('App\BorrowBook');

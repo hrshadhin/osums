@@ -10,7 +10,8 @@ use DB;
 use App\Department;
 use App\Book;
 use App\Student;
-
+use App\BorrowBook;
+use App\Institute;
 class libraryController extends Controller
 {
 	protected $semesters=[
@@ -175,14 +176,13 @@ class libraryController extends Controller
 		return view('library.bookissue',compact('students','semesters','departments','sessions','','books'));
 	}
 
-	public function postissueBook()
+	public function postissueBook(Request $request)
 	{
-
 		$rules=[
-			'regiNo' => 'required',
+			'students_id' => 'required',
+			'issueDate' => 'required',
 			'bookCode' => 'required',
 			'quantity' => 'required',
-			'issueDate' => 'required',
 			'returnDate' => 'required',
 
 		];
@@ -193,24 +193,14 @@ class libraryController extends Controller
 		}
 		else {
 
-
-			/*$availabeQuantity=DB::table('bookStock')->select('quantity')->where('code',$request->get('code'))->first();
-
-			if($request->get('quantity')>$availabeQuantity->quantity)
-			{
-			$errorMessages = new Illuminate\Support\MessageBag;
-			$errorMessages->add('deplicate', 'This book quantity not availabe right now!');
-			return Redirect::to('/library/issuebook')->withErrors($errorMessages)->withInput();
-
-		}*/
 		$data=$request->all();
 		$issueData = [];
 		$now=\Carbon\Carbon::now();
 		foreach ($data['bookCode'] as $key => $value){
 			$issueData[] = [
-				'regiNo' => $data['regiNo'],
+				'students_id' => $data['students_id'],
 				'issueDate' => $this->parseAppDate($data['issueDate']),
-				'code' => $value,
+				'books_id' => $value,
 				'quantity' => $data['quantity'][$key],
 				'returnDate' => $this->parseAppDate($data['returnDate'][$key]),
 				'fine' => $data['fine'][$key],
@@ -219,65 +209,53 @@ class libraryController extends Controller
 			];
 
 		}
-		Issuebook::insert($issueData);
-		/*  $issuebook = new Issuebook();
-		$issuebook->code = $request->get('code');
-		$issuebook->quantity = $request->get('quantity');
-		$issuebook->regiNo = $request->get('regiNo');
-		$issuebook->issueDate = $this->parseAppDate($request->get('issueDate'));
-		$issuebook->returnDate = $this->parseAppDate($request->get('returnDate'));
-		$issuebook->fine = $request->get('fine');
-		$issuebook->save();*/
-		return Redirect::to('/library/issuebook')->with("success","Succesfully book borrowed for '".$request->get('regiNo')."'.");
+		BorrowBook::insert($issueData);
+		$notification= array('title' => 'Data Store', 'body' => 'Succesfully book borrowed.');
+		return Redirect::to('/library/issuebook')->with("success",$notification);
 
 	}
 
 }
 public function getissueBookview()
 {
-
-	return view('library.bookissueview');
+	$status="";
+	return view('library.bookissueview',compact('status'));
 }
-public function postissueBookview()
+public function postissueBookview(Request $request)
 {
-
 	if($request->get('status')!="")
 	{
-		$books = Issuebook::select('*')
-		->Where('Status','=',$request->get('status'))
+		$books = DB::table('borrow_books')
+		->leftJoin('students', 'borrow_books.students_id', '=', 'students.id')
+		->leftJoin('books', 'borrow_books.books_id', '=', 'books.id')
+		->select('students.firstName', 'students.middleName', 'students.lastName',
+		'books.code','borrow_books.id','borrow_books.quantity','borrow_books.issueDate',
+		'borrow_books.returnDate','borrow_books.fine','borrow_books.status')
+		->where('borrow_books.status','=',$request->get('status'))
+		->where('borrow_books.deleted_at','=',NULL)
+		->orWhere('books.code','=',$request->get('code'))
+		->orWhere('borrow_books.issueDate','=',$this->parseAppDate($request->get('issueDate')))
+		->orWhere('borrow_books.returnDate','=',$this->parseAppDate($request->get('returnDate')))
 		->get();
-		return view('library.bookissueview',compact('books'));
-	}
-	if($request->get('regiNo')!="" || $request->get('code') !="" || $request->get('issueDate') !="" || $request->get('returnDate') !="")
-	{
-
-		$books = Issuebook::select('*')->where('regiNo','=',$request->get('regiNo'))
-		->orWhere('code','=',$request->get('code'))
-		->orWhere('issueDate','=',$this->parseAppDate($request->get('issueDate')))
-		->orWhere('returnDate','=',$this->parseAppDate($request->get('returnDate')))
-
-		->get();
-		return view('library.bookissueview',compact('books'));
+		$status = $request->get('status');
+		return view('library.bookissueview',compact('books','status'));
 
 	}
 	else {
-
-		return Redirect::to('/library/issuebookview')->with("error","Pleae fill up at least one feild!");
-
+		$notification= array('title' => 'Form Validation', 'body' => 'Pleae fill up at least one feild!');
+		return Redirect::to('/library/issuebookview')->with("error",$notification);
 	}
 
 }
 public function getissueBookupdate($id)
 {
-	$book= Issuebook::find($id);
-	return view('library.bookissueedit',compact('book'));
+	$book= BorrowBook::find($id);
+	$bookInfo = Book::where('id',$book->books_id)->first();
+	return view('library.bookissueedit',compact('book','bookInfo'));
 }
-public function postissueBookupdate()
+public function postissueBookupdate(Request $request)
 {
 	$rules=[
-		'regiNo' => 'required|max:20',
-		'code' => 'required|max:50',
-		'issueDate' => 'required',
 		'returnDate' => 'required',
 		'status' => 'required',
 
@@ -289,24 +267,23 @@ public function postissueBookupdate()
 	}
 	else {
 
-		$book = Issuebook::find($request->get('id'));
-		$book->code = $request->get('code');
-		$book->regiNo = $request->get('regiNo');
-		$book->issueDate = $this->parseAppDate($request->get('issueDate'));
+		$book = BorrowBook::find($request->get('id'));
 		$book->returnDate = $this->parseAppDate($request->get('returnDate'));
 		$book->fine = $request->get('fine');
 		$book->Status = $request->get('status');
 		$book->save();
-		return Redirect::to('/library/issuebookview')->with("success","Succesfully book record updated.");
+		$notification= array('title' => 'Data Update', 'body' => 'Succesfully book record updated.');
+		return Redirect::to('/library/issuebookview')->with("success",$notification);
 
 	}
 }
 
 public function deleteissueBook($id)
 {
-	$book= Issuebook::find($id);
+	$book= BorrowBook::find($id);
 	$book->delete();
-	return Redirect::to('/library/issuebookview')->with("success","Succesfully book record deleted.");
+	$notification= array('title' => 'Data Delete', 'body' => 'Succesfully book record deleted.');
+	return Redirect::to('/library/issuebookview')->with("success",$notification);
 }
 public function getsearch()
 {
@@ -400,7 +377,7 @@ public function Reportprint($do)
 {
 	if($do=="today")
 	{
-		$todayReturn = DB::table('issueBook')
+		$todayReturn = DB::table('borrow_books')
 		->join('Student', 'Student.regiNo', '=', 'issueBook.regiNo')
 		->join('Books','books.code','=','issueBook.code')
 		->join('Class','class.code','=','Student.class')
@@ -430,17 +407,15 @@ public function Reportprint($do)
 
 		$datas=$expires;
 		$institute=Institute::select('*')->first();
-		$pdf = PDF::loadView('library.libraryreportprinttex',compact('datas','rdata','institute'));
-		return $pdf->stream('books-expire-List.pdf');
+		return view('library.libraryreportprinttex',compact('datas','rdata','institute'));
+
 	}
 	else {
-		$books = AddBook::select('*')->where('type',$do)->get();
+		$books = Book::select('*')->with('stock')->where('type',$do)->get();
 		$rdata =array('name'=>$do,'total'=>count($books));
-
 		$datas=$books;
 		$institute=Institute::select('*')->first();
-		$pdf = PDF::loadView('library.libraryreportbooks',compact('datas','rdata','institute'));
-		return $pdf->stream('books-expire-List.pdf');
+		return view('library.libraryreportbooks',compact('datas','rdata','institute'));
 	}
 	return $do;
 }
@@ -477,14 +452,14 @@ private function  parseAppDate($datestr)
 	return $date[2].'-'.$date[1].'-'.$date[0];
 }
 
-public function checkBookAvailability($code,$quantity)
+public function checkBookAvailability($books_id,$quantity)
 {
-	$availabeQuantity=DB::table('bookStock')
+	$availabeQuantity=DB::table('stock_books')
 	->select('quantity')
-	->where('code',$code)->first();
+	->where('books_id',$books_id)->first();
 	$result = "Yes";
 	if($quantity>$availabeQuantity->quantity)
-	$result = "No";
+		$result = "No";
 	return ["isAvailable" => $result ];
 
 

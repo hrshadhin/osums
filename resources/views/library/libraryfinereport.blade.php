@@ -1,90 +1,103 @@
 @extends('layouts.master')
-@section('style')
-    <link href="<?php  echo url();?>/css/bootstrap-datepicker.css" rel="stylesheet">
 
-@stop
+@section('title', 'Library-Fine-Report')
+@section('extrastyle')
+<style media="screen">
+.table-condensed thead tr:nth-child(2),
+.table-condensed tbody {
+	display: none
+}
+.daterangepicker select.yearselect {
+    width: 55%;
+}
+
+</style>
+@endsection
+
 @section('content')
 
-<div class="row">
-<div class="box col-md-12">
-        <div class="box-inner">
-            <div data-original-title="" class="box-header well">
-                <h2><i class="glyphicon glyphicon-home"></i> Library Month Fine Report <i class="glyphicon glyphicon-user"></i></h2>
+<!-- page content -->
+<div class="right_col" role="main">
+	<div class="">
 
-            </div>
-            <div class="box-content">
+		<div class="clearfix"></div>
+		<!-- row start -->
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="x_panel">
+					<div class="x_title">
+						<h2>Library<small>Monthly Fine Report</small></h2>
 
-                <div class="row">
-                    <div class="col-md-12">
-
-
-                            <div class="row">
-                                <div class="col-md-12">
-
-
-                                  <div class="col-md-4">
-                                    <div class="form-group ">
-                                        <label for="month">Fine month</label>
-                                        <div class="input-group">
-
-                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i> </span>
-                                            <input type="text"   class="form-control datepicker" id="fineMonth" required  data-date-format="yyyy-mm-dd">
-                                        </div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="x_content">
+						<div class="row">
+							<div class="col-md-12">
 
 
-                                    </div>
-                                  </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
+								<div class="col-md-4">
+									<div class="form-group ">
+										<label for="month">Fine month</label>
+										<div class="input-group">
 
-                                            <label class="control-label" for="">&nbsp;</label>
-                                                <div class="input-group">
-                                              <button class="btn btn-primary pull-right" id="btnPrint"><i class="glyphicon glyphicon-print"></i> Print List</button>
-                                            </div>
-                                            </div>
-                                      </div>
-                                </div>
-                            </div>
-                            <br>
-
-                    </div>
-                </div>
+											<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i> </span>
+											<input type="text"   class="form-control datepicker" id="fineMonth" required  data-date-format="yyyy-mm-dd">
+										</div>
 
 
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
 
-        </div>
-    </div>
-</div>
-</div>
-@stop
-@section('script')
-  <script src="<?php echo url();?>/js/bootstrap-datepicker.js"></script>
-    <script type="text/javascript">
-        $( document ).ready(function() {
-          $(".datepicker").datepicker( {
-              startView: "months",
-              minViewMode: "months",
-              autoclose:true
-            });
-            $( "#btnPrint" ).click(function() {
+										<label class="control-label" for="">&nbsp;</label>
+										<div class="input-group">
+											<button class="btn btn-primary pull-right" id="btnPrint"><i class="glyphicon glyphicon-print"></i> Print List</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- row end -->
+				<div class="clearfix"></div>
 
-                var month =  $('#fineMonth').val();
-                var getUrl = window.location;
-                var baseUrl = getUrl .protocol + "//" + getUrl.host;
-                var url =baseUrl+"/library/reports/fine/";
-                if(month !="" ) {
-                   url +=month;
-                    var win = window.open(url, '_blank');
-                    win.focus();
+			</div>
+		</div>
+		<!-- /page content -->
+		@endsection
+		@section('extrascript')
+		<script src="{{ URL::asset('assets/js/moment.min.js')}}"></script>
+		<script src="{{ URL::asset('assets/js/daterangepicker.js')}}"></script>
+		<script>
+		$( document ).ready(function() {
 
-                }
-                else
-                {
-                    alert('Fill up inputs feilds correclty!!!');
-                }
-            });
+			$('.datepicker').daterangepicker({
+				singleDatePicker: true,
+				showDropdowns: true,
+				format: 'YYYY-MM'
+			}).on('hide.daterangepicker', function (ev, picker) {
+				$('.table-condensed tbody tr:nth-child(2) td').click();
+			});
+			$( "#btnPrint" ).click(function() {
 
-        });
+				var month =  $('#fineMonth').val();
+				var getUrl = window.location;
+				var baseUrl = getUrl .protocol + "//" + getUrl.host;
+				var url =baseUrl+"/library/reports/fine/";
+				if(month !="" ) {
+					url +=month;
+					var win = window.open(url, '_blank');
+					win.focus();
 
-    </script>
-@stop
+				}
+				else
+				{
+					alert('Fill up inputs feilds correclty!!!');
+				}
+			});
+
+		});
+		</script>
+		@endsection

@@ -3,7 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <style>
-
+@media print {
+ @page { margin: 0; }
+ body { margin: 1.6cm; }
+}
 .bg{
  width: 100%;
  background-color:#dcdcdc;
@@ -61,12 +64,12 @@ padding-left: 5px;
 }
 #footer
 {
-
 width:100%;
 height:50px;
 position:absolute;
 bottom:0;
 left:0;
+padding-left: 15px;
 }
 </style>
 </head>
@@ -77,7 +80,7 @@ left:0;
     <tr>
     <td class="lefthead">
 
-     <img class="logo" src="./img/logo.png">
+     <img class="logo" src="{{url('/')}}/assets/images/logo.jpg">
     </td>
 
    <td class="righthead">
@@ -107,36 +110,31 @@ left:0;
 
     <tr class="thead">
         <td>Name</td>
-        <td>Roll No</td>
-        <td>Class </td>
+        <td>Id No</td>
         <td>Book Name</td>
         <td>Author</td>
         <td>Quantity</td>
         <td>Type</td>
+        @if($rdata['do']==1)
+        <td>Issue Date</td>
+        @else
+        <td>Return Date</td>
+        @endif
         <td>Fine</td>
-
-
     </tr>
 
     @foreach($datas as $data)
         <tr>
             <td>{{$data->firstName}} {{$data->middleName}} {{$data->lastName}}</td>
-            <td>{{$data->rollNo}}</td>
-            <td>{{$data->class}}</td>
+            <td>{{$data->idNo}}</td>
             <td>{{$data->title}}</td>
             <td>{{$data->author}}</td>
             <td>{{$data->quantity}}</td>
             <td>{{$data->type}}</td>
+            <td>{{date('M,j Y',strtotime($data->date))}}</td>
             <td>{{$data->fine}}</td>
-
         </tr>
-
-
-
     @endforeach
-
-
-
 </table>
 <hr>
 <table>
@@ -145,5 +143,8 @@ left:0;
 <div id="footer">
   <p>Print Date: {{date('d/m/Y')}}</p>
 </div>
+<script type="text/javascript">
+  window.print();
+</script>
 </body>
 </html>

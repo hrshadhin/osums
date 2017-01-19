@@ -3,7 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <style>
-
+@media print {
+ @page { margin: 0; }
+ body { margin: 1.6cm; }
+}
 .bg{
  width: 100%;
  background-color:#dcdcdc;
@@ -61,7 +64,7 @@ padding-left: 5px;
 }
 #footer
 {
-
+padding-left: 15px;
 width:100%;
 height:50px;
 position:absolute;
@@ -77,7 +80,7 @@ left:0;
     <tr>
     <td class="lefthead">
 
-     <img class="logo" src="./img/logo.png">
+     <img class="logo" src="{{url('/')}}/assets/images/logo.jpg">
     </td>
 
    <td class="righthead">
@@ -112,5 +115,8 @@ left:0;
 <div id="footer">
   <p>Print Date: {{date('d/m/Y')}}</p>
 </div>
+<script type="text/javascript">
+  window.print();
+</script>
 </body>
 </html>

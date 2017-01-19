@@ -117,30 +117,30 @@ Route::group(['middleware' => 'auth'], function()
   Route::get('/library/reports/fine/{month}','libraryController@ReportsFineprint');
 
   //Hostel Routes
-  Route::get('/dormitory','dormitoryController@index');
-  Route::post('/dormitory/create','dormitoryController@create');
-  Route::get('/dormitory/edit/{id}','dormitoryController@edit');
-  Route::post('/dormitory/update','dormitoryController@update');
-  Route::get('/dormitory/delete/{id}','dormitoryController@delete');
+  Route::get('/dormitory','DormitoryController@index');
+  Route::post('/dormitory/create','DormitoryController@create');
+  Route::get('/dormitory/edit/{id}','DormitoryController@edit');
+  Route::post('/dormitory/update','DormitoryController@update');
+  Route::get('/dormitory/delete/{id}','DormitoryController@delete');
 
-  Route::get('/dormitory/getstudents/{dormid}','dormitoryController@getstudents');
+  Route::get('/dormitory/getstudents/{dormid}','DormitoryController@getstudents');
 
-  Route::get('/dormitory/assignstd','dormitoryController@stdindex');
-  Route::post('/dormitory/assignstd/create','dormitoryController@stdcreate');
-  Route::get('/dormitory/assignstd/list','dormitoryController@stdshow');
-  Route::post('/dormitory/assignstd/list','dormitoryController@poststdShow');
-  Route::get('/dormitory/assignstd/edit/{id}','dormitoryController@stdedit');
-  Route::post('/dormitory/assignstd/update','dormitoryController@stdupdate');
-  Route::get('/dormitory/assignstd/delete/{id}','dormitoryController@stddelete');
+  Route::get('/dormitory/assignstd','DormitoryController@stdindex');
+  Route::post('/dormitory/assignstd/create','DormitoryController@stdcreate');
+  Route::get('/dormitory/assignstd/list','DormitoryController@stdshow');
+  Route::post('/dormitory/assignstd/list','DormitoryController@poststdShow');
+  Route::get('/dormitory/assignstd/edit/{id}','DormitoryController@stdedit');
+  Route::post('/dormitory/assignstd/update','DormitoryController@stdupdate');
+  Route::get('/dormitory/assignstd/delete/{id}','DormitoryController@stddelete');
 
-  Route::get('/dormitory/fee','dormitoryController@feeindex');
-  Route::post('/dormitory/fee','dormitoryController@feeadd');
-  Route::get('/dormitory/fee/info/{regiNo}','dormitoryController@feeinfo');
+  Route::get('/dormitory/fee','DormitoryController@feeindex');
+  Route::post('/dormitory/fee','DormitoryController@feeadd');
+  Route::get('/dormitory/fee/info/{regiNo}','DormitoryController@feeinfo');
 
-  Route::get('/dormitory/report/std','dormitoryController@reportstd');
-  Route::get('/dormitory/report/std/{dormId}','dormitoryController@reportstdprint');
-  Route::get('/dormitory/report/fee','dormitoryController@reportfee');
-  Route::get('/dormitory/report/fee/{dormId}/{month}','dormitoryController@reportfeeprint');
+  Route::get('/dormitory/report/std','DormitoryController@reportstd');
+  Route::get('/dormitory/report/std/{dormId}','DormitoryController@reportstdprint');
+  Route::get('/dormitory/report/fee','DormitoryController@reportfee');
+  Route::get('/dormitory/report/fee/{dormId}/{month}','DormitoryController@reportfeeprint');
 
   //barcode generate
   Route::get('/barcode','barcodeController@index');

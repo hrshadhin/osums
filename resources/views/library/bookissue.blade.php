@@ -185,7 +185,7 @@
 					</div>
 						</div>
 					</div>
-		
+
 					<!-- /page content -->
 					@endsection
 					@section('extrascript')
@@ -371,7 +371,7 @@
 									});
 							 }
 						 });
-					//	btnSaveIsvisibale();
+						btnSaveIsvisibale();
 						$('select').select2();
 						//add fee to grid
 						$( "#btnAddRow" ).click(function() {

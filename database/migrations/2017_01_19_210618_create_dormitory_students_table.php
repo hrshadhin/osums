@@ -17,8 +17,8 @@ class CreateDormitoryStudentsTable extends Migration
             $table->integer('students_id')->unsigned();
             $table->integer('dormitories_id')->unsigned();
             $table->date('joinDate');
-            $table->date('leaveDate');
-            $table->string('roomNo',50);
+            $table->date('leaveDate')->nullable();
+            $table->string('roomNo',255);
             $table->decimal('monthlyFee',10,2);
             $table->string('isActive',3);
             $table->timestamps();

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class DormitoryStudent extends Model
 {
@@ -18,9 +19,16 @@ class DormitoryStudent extends Model
     'leaveDate',
     'roomNo',
     'monthlyFee',
-    'isActive',    
+    'isActive',
   ];
-
+  function setJoinDateAttribute($value)
+  {
+    $this->attributes['joinDate'] = Carbon::createFromFormat('d/m/Y', $value);
+  }
+  function setLeaveDateAttribute($value)
+  {
+    $this->attributes['leaveDate'] = Carbon::createFromFormat('d/m/Y', $value);
+  }
   public function dormitory() {
     return $this->belongsTo('App\Dormitory');
   }

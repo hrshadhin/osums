@@ -200,7 +200,21 @@
                   <li><a href="/library/reports/fine"><i class="glyphicon glyphicon-print"></i> Monthly Fine Reports</a></li>
                 </ul>
               </li>
-
+              <li class="">
+                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  <span class=" fa fa-home"></span> Dormitory
+                  <span class=" fa fa-angle-down"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="/dormitory"><i class="glyphicon glyphicon-home"></i> Dormitory</a></li>
+                  <li><a href="/dormitory/assignstd"><i class="glyphicon glyphicon-plus"></i> Assign Student</a></li>
+                  <li><a href="/dormitory/assignstd/list"><i class="glyphicon glyphicon-user"></i> Student List</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/dormitory/fee"><i class="glyphicon glyphicon-list"></i> Fee Collection</a></li>
+                  <li><a href="/dormitory/report/std"><i class="glyphicon glyphicon-print"></i> Dormitory Report</a></li>
+                  <li><a href="/dormitory/report/fee"><i class="glyphicon glyphicon-print"></i> Fee Reports</a></li>
+                </ul>
+              </li>
           </ul>
           </nav>
         </div>

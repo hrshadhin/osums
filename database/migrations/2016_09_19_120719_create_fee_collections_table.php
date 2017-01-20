@@ -45,7 +45,7 @@ class CreateFeeCollectionsTable extends Migration
     */
     public function down()
     {
-        Schema::drop('fee_collections');
         Schema::drop('fee_collection_items');
+        Schema::drop('fee_collections');
     }
 }

@@ -30,9 +30,13 @@ class DormitoryStudent extends Model
     $this->attributes['leaveDate'] = Carbon::createFromFormat('d/m/Y', $value);
   }
   public function dormitory() {
-    return $this->belongsTo('App\Dormitory');
+    return $this->belongsTo('App\Dormitory','dormitories_id');
   }
   public function student() {
-    return $this->belongsTo('App\Student');
+    return $this->belongsTo('App\Student','students_id');
   }
+  public function fee() {
+    return $this->hasMany('App\DormitoryFee','dormitory_students_id');
+  }
+
 }

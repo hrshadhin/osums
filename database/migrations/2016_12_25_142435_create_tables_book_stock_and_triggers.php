@@ -86,7 +86,7 @@ class CreateTablesBookStockAndTriggers extends Migration
      */
     public function down()
     {
-        Schema::drop('stock_book');
+        Schema::drop('stock_books');
         //drop tiggers
         DB::unprepared('DROP IF EXISTS TRIGGER `afterBookAdd`');
         DB::unprepared('DROP IF EXISTS TRIGGER `afterBookDelete`');

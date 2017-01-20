@@ -15,6 +15,7 @@ class CreateDormitoryFeesTable extends Migration
         Schema::create('dormitory_fees', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('students_id')->unsigned();
+            $table->integer('dormitory_students_id')->unsigned();
             $table->date('feeMonth');
             $table->decimal('feeAmount',10,2);
             $table->timestamps();
@@ -22,6 +23,9 @@ class CreateDormitoryFeesTable extends Migration
             $table->foreign('students_id')
             ->references('id')
             ->on('students');
+            $table->foreign('dormitory_students_id')
+            ->references('id')
+            ->on('dormitory_students');
         });
     }
 

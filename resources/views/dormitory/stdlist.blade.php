@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Department')
+@section('title', 'Dormitory')
 @section('extrastyle')
 <link href="{{ URL::asset('assets/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
 <link href="{{ URL::asset('assets/css/responsive.dataTables.min.css')}}" rel="stylesheet">
@@ -59,7 +59,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-12">
-								<table id="studentList" class="table table-striped table-bordered table-hover">
+								<table id="datatable-buttons" class="table table-striped table-bordered table-hover">
 									<thead>
 										<tr>
 											<th>Name</th>
@@ -86,7 +86,7 @@
 											<td>{{$student->roomNo}}</td>
 											<td>{{$student->monthlyFee}}</td>
 											<td>{{date('M,j Y',strtotime($student->joinDate))}}</td>
-											<td>{{date('M,j Y',strtotime($student->leaveDate))}}</td>
+											<td>@if($student->leaveDate){{date('M,j Y',strtotime($student->leaveDate))}}@endif</td>
 											<td>{{$student->isActive}}</td>
 											<td>
 												<a title='Edit' class='btn btn-info' href='{{url("/dormitory/assignstd/edit")}}/{{$student->id}}'> <i class="glyphicon glyphicon-edit icon-white"></i></a>&nbsp&nbsp<a title='Delete' class='btn btn-danger' href='{{url("/dormitory/assignstd/delete")}}/{{$student->id}}'> <i class="glyphicon glyphicon-trash icon-white"></i></a>

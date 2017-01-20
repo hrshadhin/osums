@@ -3,7 +3,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <style>
-
+@media print {
+ @page { margin: 0; }
+ body { margin: 1.6cm; }
+ body {-webkit-print-color-adjust: exact;}
+}
 .bg{
  width: 100%;
  background-color:#dcdcdc;
@@ -61,7 +65,7 @@ padding-left: 5px;
 }
 #footer
 {
-
+padding-left: 15px;
 width:100%;
 height:50px;
 position:absolute;
@@ -77,7 +81,7 @@ left:0;
     <tr>
     <td class="lefthead">
 
-     <img class="logo" src="./img/logo.png">
+     <img class="logo" src="{{url('/')}}/assets/images/logo.jpg">
     </td>
 
    <td class="righthead">
@@ -94,11 +98,11 @@ left:0;
  </table>
  <table class="bg2">
    <tr><td>
-    Dormitory Fee Report
+    Dormitory Report
   </td>
   <td><strong>{{$rdata['name']}}</strong></td>
   <td >
-    Month : <strong>{{$rdata['month']}}</strong>
+
   </td>
 </tr>
 </table>
@@ -106,43 +110,43 @@ left:0;
 <table class="bg3">
 
     <tr class="thead">
-        <td>Regi. No</td>
-        <td>Name</td>
-        <td>Class</td>
-        <td>Room No</td>
-        <td>Status</td>
-
-
+      <th>Name</th>
+      <th>Contact</th>
+      <th>Department</th>
+      <th>Id No</th>
+      <th>Guardian's Contact</th>
+      <th>Room No</th>
+      <th>Fee</th>
+      <th>Joind Date</th>
+      <th>Leave Date</th>
+      <th>Is Active</th>
     </tr>
-
-    @foreach($datas as $data)
-        <tr>
-            <td>{{$data->regiNo}}</td>
-            <td>{{$data->name}}</td>
-            <td>{{$data->class}}</td>
-            <td>{{$data->roomNo}}</td>
-            @if($data->isPaid=="Paid")
-              <td class="green">{{$data->isPaid}}</td>
-            @else
-                <td class="red">{{$data->isPaid}}</td>
-            @endif
-
-        </tr>
-
-
-
-    @endforeach
-
+          @foreach($students as $student)
+          <tr>
+            <td>{{$student->firstName}} {{$student->middleName}} {{$student->lastName}}</td>
+            <td>{{$student->mobileNo}}</td>
+            <td>{{$student->department}}</td>
+            <td>{{$student->idNo}}</td>
+            <td>{{$student->fatherMobileNo}}</td>
+            <td>{{$student->roomNo}}</td>
+            <td>{{$student->monthlyFee}}</td>
+            <td>{{date('M,j Y',strtotime($student->joinDate))}}</td>
+            <td>@if($student->leaveDate){{date('M,j Y',strtotime($student->leaveDate))}}@endif</td>
+            <td>{{$student->isActive}}</td>
+            @endforeach
 
 <br>
 
 </table>
 
 <table>
- <tr>  <td><strong>Total:</strong></td><td>{{$rdata['total']}}</td><tr>
+ <tr>  <td><strong>Total Rooms:</strong></td><td>{{$rdata['totalr']}}</td><td>&nbsp;&nbsp;</td><td><strong>Total Students:</strong></td><td>{{$rdata['totals']}}</td> <tr>
 </table>
 <div id="footer">
   <p>Print Date: {{date('d/m/Y')}}</p>
 </div>
+<script type="text/javascript">
+  window.print();
+</script>
 </body>
 </html>

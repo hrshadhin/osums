@@ -6,6 +6,7 @@
 @media print {
  @page { margin: 0; }
  body { margin: 1.6cm; }
+ body {-webkit-print-color-adjust: exact;}
 }
 .bg{
  width: 100%;

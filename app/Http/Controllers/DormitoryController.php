@@ -12,6 +12,7 @@ use App\Student;
 use App\Institute;
 use App\Dormitory;
 use App\DormitoryStudent;
+use App\DormitoryFee;
 
 class DormitoryController extends Controller
 {
@@ -167,7 +168,7 @@ class DormitoryController extends Controller
       $dormStd = new DormitoryStudent;
       $dormStd->students_id=$request->get('students_id');
       $dormStd->joinDate=$request->get('joinDate');
-      $dormStd->leaveDate=null;
+      //$dormStd->leaveDate=null;
       $dormStd->dormitories_id=$request->get('dormitories_id');
       $dormStd->roomNo=$request->get('roomNo');
       $dormStd->monthlyFee=$request->get('monthlyFee');
@@ -279,23 +280,29 @@ class DormitoryController extends Controller
 
   public function getstudents($dormid)
   {
-    $students = DB::table('Student')
-    ->join('dormitory_student', 'Student.regiNo', '=', 'dormitory_student.regiNo')
-    ->select('Student.regiNo', 'Student.rollNo', 'Student.firstName', 'Student.middleName', 'Student.lastName')
-    ->where('dormitory_student.dormitory',$dormid)
-    ->where('dormitory_student.isActive',"Yes")
-    ->orderby('dormitory_student.regiNo','asc')->get();
-    return $students;
+    $students = DormitoryStudent::select('*')->with('student')
+    ->where('dormitories_id',$dormid)
+    ->where('isActive','Yes')
+    ->get();
+    $studentList = [];
+    foreach ($students as $student) {
+       $data =[
+         'id' => $student->students_id.'-'.$student->id,
+         'name' => $student->student->firstName.' '.$student->student->middleName.' '.$student->student->lastName.'['.$student->student->idNo.']'
+       ];
+       $studentList[] = $data;
+    }
+    return $studentList;
   }
   public function feeinfo($regiNo)
   {
     $fee = DormitoryStudent::select('monthlyFee')
-    ->where('regiNo',$regiNo)
+    ->where('students_id',$regiNo)
     ->get();
 
-    $isPaid= DB::table('dormitory_fee')
-    ->select('regiNo','feeAmount')
-    ->where('regiNo',$regiNo)
+    $isPaid= DB::table('dormitory_fees')
+    ->select('students_id','feeAmount')
+    ->where('students_id',$regiNo)
     ->whereRaw('EXTRACT(YEAR_MONTH FROM feeMonth) = EXTRACT(YEAR_MONTH FROM NOW())')
     ->get();
 
@@ -312,16 +319,16 @@ class DormitoryController extends Controller
 
   public function feeindex()
   {
-    $dormitories=Dormitory::select('name','id')->orderby('id','asc')->get();
-    return View::Make('app.dormitory_fee',compact('dormitories'));
+    $dormitories = Dormitory::select('id','name')->lists('name','id');
+    $dormitories->prepend('--select a dormitory--', '');
+    return view('dormitory.fee',compact('dormitories'));
   }
-  public function feeadd()
+  public function feeadd(Request $request)
   {
     $rules=[
-      'regiNo' => 'required',
+      'student' => 'required',
       'feeMonth' => 'required',
       'feeAmount' => 'required',
-
     ];
     $validator = \Validator::make($request->all(), $rules);
     if ($validator->fails())
@@ -330,66 +337,66 @@ class DormitoryController extends Controller
     }
     else {
       $dormFee = new DormitoryFee;
-      $dormFee->regiNo=$request->get('regiNo');
+      $ids = mb_split('-',$request->get('student'));
+      $dormFee->students_id=$ids[0];
+      $dormFee->dormitory_students_id=$ids[1];
       $dormFee->feeMonth=$request->get('feeMonth');
       $dormFee->feeAmount=$request->get('feeAmount');
       $dormFee->save();
-      return Redirect::to('/dormitory/fee')->with("success","Fee added Succesfully.");
+      $notification = ['title'=>'Data Store', 'body' => "Fee added Succesfully."];
+      return Redirect::to('/dormitory/fee')->with("success",$notification);
 
     }
   }
 
   public function reportstd()
   {
-    $dormitories=Dormitory::select('name','id')->orderby('id','asc')->get();
-    return View::Make('app.dormitory_rptstd',compact('dormitories'));
+    $dormitories = Dormitory::select('id','name')->lists('name','id');
+    return view('dormitory.rptstd',compact('dormitories'));
   }
   public function reportstdprint($dormId)
   {
-    $datas = DB::table('Student')
-    ->join('Class', 'Student.class', '=', 'Class.code')
-    ->join('dormitory_student', 'Student.regiNo', '=', 'dormitory_student.regiNo')
-    ->select('dormitory_student.id', 'Student.regiNo', 'Student.rollNo', 'Student.firstName', 'Student.middleName', 'Student.lastName', 'Student.fatherName', 'Student.motherName', 'Student.fatherMobileNo', 'Student.motherMobileNo', 'Student.localGuardianMobile',
-    'Class.Name as class','dormitory_student.roomNo','Student.section','Student.session' )
-    ->where('dormitory_student.dormitory',$dormId)
-    ->where('dormitory_student.isActive',"Yes")
+    $students = DB::table('dormitory_students')
+    ->leftJoin('students', 'dormitory_students.students_id', '=', 'students.id')
+    ->leftjoin('department', 'students.department_id', '=', 'department.id')
+    ->leftjoin('dormitories', 'dormitory_students.dormitories_id', '=', 'dormitories.id')
+    ->select('dormitory_students.id', 'students.idNo','students.firstName',
+     'students.middleName', 'students.lastName', 'students.fatherName','students.mobileNo',
+     'students.motherName', 'students.fatherMobileNo', 'students.motherMobileNo',
+     'students.localGuardianMobileNo','department.name as department',
+     'dormitory_students.roomNo','dormitory_students.monthlyFee',
+     'dormitory_students.joinDate',
+     'dormitory_students.leaveDate',
+     'dormitory_students.isActive')
+    ->where('dormitory_students.dormitories_id',$dormId)
+    ->where('dormitory_students.deleted_at',NULL)
+    ->where('dormitory_students.isActive',"Yes")
     ->get();
     $dormInfo = Dormitory::find($dormId);
     $institute=Institute::select('*')->first();
-    $rdata =array('date'=>date('d/m/Y'),'name'=>$dormInfo->name,'totalr'=>$dormInfo->numOfRoom,'totals'=>count($datas));
-    $pdf = PDF::loadView('app.dormitory_rptstdprint',compact('datas','rdata','institute'));
-    return $pdf->stream('dormitory-students-List.pdf');
+    $rdata =array('date'=>date('d/m/Y'),'name'=>$dormInfo->name,'totalr'=>$dormInfo->numOfRoom,'totals'=>count($students));
+    return view('dormitory.rptstdprint',compact('students','rdata','institute'));
   }
   public function reportfee()
   {
-    $dormitories=Dormitory::select('name','id')->orderby('id','asc')->get();
-    return View::Make('app.dormitory_rptfee',compact('dormitories'));
+    $dormitories = Dormitory::select('id','name')->lists('name','id');
+    return view('dormitory.rptfee',compact('dormitories'));
   }
   public function reportfeeprint($dormId,$month)
   {
 
-    $myquery="SELECT a.regiNo,a.roomNo,CONCAT(b.firstName,' ',b.middleName,' ',b.lastName) as name,c.name as class,'Paid' as isPaid FROM dormitory_student a
-    JOIN Student b ON a.regiNo=b.regiNo
-    JOIN Class c ON c.code=b.class
-    where a.dormitory=".$dormId."
-    and EXISTS (select b.feeMonth from dormitory_fee b where b.regiNo=a.regiNo and EXTRACT(YEAR_MONTH FROM b.feeMonth) = EXTRACT(YEAR_MONTH FROM '".$month."'))
-
-    UNION SELECT a.regiNo,a.roomNo,CONCAT(b.firstName,' ',b.middleName,' ',b.lastName) as name,c.name as class,'Due' as isPaid FROM dormitory_student a
-    JOIN Student b ON a.regiNo=b.regiNo
-    JOIN Class c ON c.code=b.class
-    WHERE a.dormitory=".$dormId."
-    and NOT EXISTS (select b.feeMonth from dormitory_fee b where b.regiNo=a.regiNo and EXTRACT(YEAR_MONTH FROM b.feeMonth) = EXTRACT(YEAR_MONTH FROM '".$month."'))
-    ORDER BY regiNo";
-
-    $datas = DB::select(DB::raw($myquery));
-
-
+    $students = DormitoryStudent::with('student')
+    ->with(array('fee' => function($query) use ($month){
+     $query->whereRaw("EXTRACT(YEAR_MONTH FROM feeMonth) = EXTRACT(YEAR_MONTH FROM '".$month."-01')");
+    }))
+    ->where('dormitories_id',$dormId)
+    ->where('isActive','Yes')
+    ->get();
 
     $dormInfo = Dormitory::find($dormId);
     $institute=Institute::select('*')->first();
 
-    $rdata =array('month'=>date('F-Y', strtotime($month)),'name'=>$dormInfo->name,'total'=>count($datas));
-    $pdf = PDF::loadView('app.dormitory_rptfeeprint',compact('datas','rdata','institute'));
-    return $pdf->stream('dormitory-free-report.pdf');
+    $rdata =array('month'=>date('F-Y', strtotime($month)),'name'=>$dormInfo->name,'total'=>count($students));
+    return view('dormitory.rptfeeprint',compact('students','rdata','institute'));
   }
 }

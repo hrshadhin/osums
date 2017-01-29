@@ -135,13 +135,15 @@ class studentController extends Controller {
 			'parmanentAddress' => 'required'
 		];
 		$validator = Validator::make($data, $rules);
-		$errors=$validator->messages()->toArray();
+		//$errors=$validator->messages()->toArray();
 		if ($validator->fails())
 		{
-			return Response()->json([
-				'error' => true,
-				'message' => $errors
-			], 400);
+			return Redirect::route('student.create')->withInput()->withErrors($validator);
+
+			// return Response()->json([
+			// 	'error' => true,
+			// 	'message' => $errors
+			// ], 400);
 		}
 
 		$directory = public_path() . "/assets/images/students/";
@@ -151,10 +153,12 @@ class studentController extends Controller {
 		$data['photo']=$fileName;
 		$student = new Student;
 		$student->create($data);
-		return Response()->json([
-			'success' => true,
-			'message' => "Student data store successfully."
-		], 200);
+		// return Response()->json([
+		// 	'success' => true,
+		// 	'message' => "Student data store successfully."
+		// ], 200);
+		$notification= array('title' => 'Data Store', 'body' => 'Student admitted succesfully.');
+		return Redirect::route('student.create')->with("success",$notification);
 
 	}
 
@@ -232,13 +236,14 @@ class studentController extends Controller {
 			'parmanentAddress' => 'required'
 		];
 		$validator = Validator::make($data, $rules);
-		$errors=$validator->messages()->toArray();
+		//$errors=$validator->messages()->toArray();
 		if ($validator->fails())
 		{
-			return Response()->json([
-				'error' => true,
-				'message' => $errors
-			], 400);
+			return Redirect::route('student.edit',[$id])->withInput()->withErrors($validator);
+			// return Response()->json([
+			// 	'error' => true,
+			// 	'message' => $errors
+			// ], 400);
 		}
 		else {
 			try {
@@ -260,10 +265,12 @@ class studentController extends Controller {
 				$data['session']=$student->session;
 				$data['idNo']=$student->idNo;
 				$student->fill($data)->save();
-				return Response()->json([
-					'success' => true,
-					'message' => "Student Information Updated Succesfully."
-				], 200);
+				// return Response()->json([
+				// 	'success' => true,
+				// 	'message' => "Student Information Updated Succesfully."
+				// ], 200);
+				$notification= array('title' => 'Data Update', 'body' => "Student Information Updated Succesfully.");
+				return Redirect::route('student.index')->with("success",$notification);
 			}
 			catch (Exception $e)
 			{

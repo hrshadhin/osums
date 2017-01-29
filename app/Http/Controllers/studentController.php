@@ -9,6 +9,7 @@ use App\Student;
 use App\Department;
 use Validator;
 use Session;
+use Carbon\Carbon;
 use App\Registration;
 use App\Transformers\StudentTransformer;
 
@@ -75,12 +76,12 @@ class studentController extends Controller {
 	{
 
 		$sdts=Registration::with(array('student' =>  function($query){
- 					$query->select('id','idNo','firstName','middleName','lastName','photo');
- 		}))
- 		->where('department_id',$dID)
- 		->where('session',$session)
- 		->where('levelTerm',$semester)
- 		->get();
+			$query->select('id','idNo','firstName','middleName','lastName','photo');
+		}))
+		->where('department_id',$dID)
+		->where('session',$session)
+		->where('levelTerm',$semester)
+		->get();
 
 		$students= Fractal()->collection($sdts, new StudentTransformer());
 		return Response()->json([
@@ -314,35 +315,82 @@ class studentController extends Controller {
 		$data=$request->all();
 		$rules=[
 			'department_id' => 'required',
-			'students_id' => 'required',
+			//	'ids' => 'required',
+			//'registeredIds' => 'required',
 			'levelTerm' => 'required'
 		];
 		$validator = Validator::make($data, $rules);
-		$errors=$validator->messages()->toArray();
+		//$errors=$validator->messages()->toArray();
 		if ($validator->fails()){
-			return Response()->json([
-				'error' => true,
-				'message' => $errors
-			], 400);
+			return back()->withErrors($validator);
+			// return Response()->json([
+			// 	'error' => true,
+			// 	'message' => $errors
+			// ], 400);
 		}
-		$isExists = Registration::where('department_id',$data['department_id'])
-		->where('students_id',$data['students_id'])
-		->where('levelTerm',$data['levelTerm'])->first();
-
-		if($isExists){
-			return Response()->json([
-				'error' => true,
-				'message' => ['Data Exists'=>"This student already registered!"]
-			], 400);
+		if(!$request->exists('ids') || !count($data['ids']) || !$request->exists('registeredIds') || !count($data['registeredIds'])){
+			$validator->errors()->add('Student', 'Please select at least one student!');
+			return back()->withErrors($validator);
 		}
-		Registration::create($data);
-		$notification= array('title' => 'Data Store', 'body' => 'Registration Successfull.');
-		return Response()->json([
-			'success' => true,
-			'message' => $notification
-		], 200);
+		$toBeRegisterStudents = [] ;
+		$alreadyRegistered = 0;
+		$newRegistration = 0;
+		foreach ($data['ids'] as  $id){
+			$isExists = false;
+			$isWantTo = $this->isWantToRegister($id,$data['registeredIds']);
+			if($isWantTo){
+				$sts = Registration::where('department_id',$data['department_id'])
+				->where('students_id',$id)
+				->where('levelTerm',$data['levelTerm'])->first();
+				if($sts){
+					$isExists = true;
+					$alreadyRegistered +=1;
 
+				}
+				if(!$isExists){
+					$toBeRegisterStudents [] = [
+						'levelTerm' => $data['levelTerm'],
+						'department_id' => $data['department_id'],
+						'students_id' => $id,
+						'session' => $data['session'],
+						'created_at' => Carbon::now(),
+						'updated_at' => Carbon::now()
+					];
+					$newRegistration +=1;
+				}
+			}
+		}
+		// $isExists = Registration::where('department_id',$data['department_id'])
+		// ->where('students_id',$data['students_id'])
+		// ->where('levelTerm',$data['levelTerm'])->first();
+		//
+		// if($isExists){
+		// 	return Response()->json([
+		// 		'error' => true,
+		// 		'message' => ['Data Exists'=>"This student already registered!"]
+		// 	], 400);
+		// }
+		Registration::insert($toBeRegisterStudents);
+		$notification= array('title' => 'Data Store', 'body' => $newRegistration.' students new registration successfull.');
+		// return Response()->json([
+		// 	'success' => true,
+		// 	'message' => $notification
+		// ], 200);
+		if($alreadyRegistered){
+			$notification= array('title' => 'Data Store', 'body' => $newRegistration.' students newly registerd and '.$alreadyRegistered.' has already registered!');
+		}
+		return back()->with("success",$notification);
 
+	}
+	private  function isWantToRegister($id,$registeredIds)
+	{
+		foreach ($registeredIds as $key => $value) {
+			if($id==$key)
+			{
+				return 1;
+			}
+		}
+		return 0;
 	}
 
 	public function regIndex(){
@@ -357,13 +405,13 @@ class studentController extends Controller {
 	}
 	public function regList(Request $request){
 
-		 $students=Registration::with(array('student' =>  function($query){
-						$query->select('id','idNo','firstName','middleName','lastName','photo');
-			}))
-			->where('department_id',$request->input('department_id'))
-			->where('session',$request->input('session'))
-			->where('levelTerm',$request->input('levelTerm'))
-			->get();
+		$students=Registration::with(array('student' =>  function($query){
+			$query->select('id','idNo','firstName','middleName','lastName','photo');
+		}))
+		->where('department_id',$request->input('department_id'))
+		->where('session',$request->input('session'))
+		->where('levelTerm',$request->input('levelTerm'))
+		->get();
 
 		$departments = Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
 		$sessions=Student::select('session','session')->distinct()->lists('session','session');

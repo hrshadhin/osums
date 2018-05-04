@@ -19,7 +19,9 @@
 		<link href="{{ URL::asset('assets/css/custom.min.css')}}" rel="stylesheet">
 		<link href="{{ URL::asset('assets/css/app.css')}}" rel="stylesheet">
     @yield("extrastyle")
-
+    <script>
+      var hash = '{{AppHelper::gerCRVHash()}}';
+    </script>
   </head>
 
   <body class="nav-md footer_fixed">
@@ -288,7 +290,6 @@
     });
   </script>
   <!-- /PNotify -->
-
 
 </body>
 </html>

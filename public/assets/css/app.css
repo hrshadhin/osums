@@ -71,3 +71,9 @@ float: right;
 #datatable-buttons_info{
   display: none;
 }
+.modal-backdrop {
+  z-index: 9999999;
+}
+#crvPop {
+  z-index: 99999999;
+}

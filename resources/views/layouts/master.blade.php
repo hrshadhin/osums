@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-   <title>INSD - @yield("title")</title>
+   <title>{{session('inNameShort')}} - @yield("title")</title>
     <!-- Bootstrap -->
     <link href="{{ URL::asset('assets/css/bootstrap.min.css')}}" rel="stylesheet">
     <!-- Font Awesome -->
@@ -20,7 +20,7 @@
 		<link href="{{ URL::asset('assets/css/app.css')}}" rel="stylesheet">
     @yield("extrastyle")
     <script>
-      var hash = '{{$idh}}';
+      var hash = '{{session('user_session_sha1')}}';
     </script>
   </head>
 
@@ -33,7 +33,7 @@
           <div class="left_col scroll-view">
 
 <div class="navbar nav_title" style="border: 0;">
-              <a href="{{URL::route('user.dashboard')}}" class="site_title"><i class="fa fa-bank"></i> <span> INSD</span></a>
+              <a href="{{URL::route('user.dashboard')}}" class="site_title"><i class="fa fa-bank"></i> <span> {{session('inNameShort')}}</span></a>
             </div>
 
             <div class="clearfix"></div>

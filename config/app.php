@@ -206,6 +206,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Fractal' => Spatie\Fractal\FractalFacade::class,
+        'AppHelper' => App\Http\Helpers\AppHelper::class,
 
     ],
 

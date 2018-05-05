@@ -85,3 +85,7 @@ footer a {
   color: #3498db;
   font-weight: bold;
 }
+.nav-md .container.body .right_col{
+  height: 100%;
+  margin-bottom: 49px;
+}

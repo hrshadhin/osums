@@ -11,6 +11,8 @@ use Session;
 use App\Institute;
 use Validator;
 use Hash;
+use App\Http\Helpers\AppHelper;
+
 class UserController extends Controller {
 
 	public function __construct()
@@ -28,6 +30,7 @@ class UserController extends Controller {
 		if (Auth::attempt(array('login'=>Input::get('login'), 'password'=>Input::get('password')))) {
 			$name=Auth::user()->firstname.' '.Auth::user()->lastname;
 			Session::put('name', $name);
+			Session::put('user_session_sha1', AppHelper::getUserSessionHash());
 
 			$institute=Institute::select('name')->first();
 			if(!$institute)
@@ -47,6 +50,7 @@ class UserController extends Controller {
 			}
 			else {
 				Session::put('inName', $institute->name);
+				Session::put('inNameShort', AppHelper::getShortName($institute->name));
 				$notification= array('title' => 'Login', 'body' => 'You are now logged in.');
 				return Redirect::to('/dashboard')->with('success',$notification);
 			}

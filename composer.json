@@ -32,7 +32,7 @@
     "autoload-dev": {
         "classmap": [
             "tests/TestCase.php",
-            "app/Http/helpers.php"
+            "app/Http/Helpers/AppHelper.php"
         ]
     },
     "scripts": {

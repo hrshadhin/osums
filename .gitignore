@@ -1,7 +1,7 @@
 /vendor
 /node_modules
 /public/storage
-/public/assets/images/students
+/screenshots/students
 Homestead.yaml
 Homestead.json
 .env

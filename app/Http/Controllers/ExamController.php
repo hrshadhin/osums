@@ -24,17 +24,18 @@ class ExamController extends Controller
 		$this->middleware('teacher');
 	}
   protected $semesters=[
-    'L1T1' => 'First Year 1st Semester',
-    'L1T2' => 'First Year 2nd Semester',
-    'L2T1' => 'Second Year 1st Semester',
-    'L2T2' => 'Second Year 2nd Semester',
-    'L3T1' => 'Third Year 1st Semester',
-    'L3T2' => 'Third Year 2nd Semester'
+    'L1T1' => '1st Year 1st Semester',
+    'L1T2' => '1st Year 2nd Semester',
+    'L2T1' => '2nd Year 1st Semester',
+    'L2T2' => '2nd Year 2nd Semester',
+    'L3T1' => '3rd Year 1st Semester',
+    'L3T2' => '3rd Year 2nd Semester',
+    'L4T1' => '4th Year 1st Semester',
+    'L4T2' => '4th Year 2nd Semester'
   ];
   protected $exams=[
     'Midterm Exam' => 'Midterm Exam',
     'Final Exam' => 'Final Exam',
-    'Lab & Quiz' => 'Lab & Quiz',
   ];
 
   public function Create()

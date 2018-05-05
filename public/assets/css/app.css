@@ -72,10 +72,10 @@ float: right;
   display: none;
 }
 .modal-backdrop {
-  z-index: 9999999;
+  z-index: 9999;
 }
-#crvPop {
-  z-index: 99999999;
+#crvPop,.modal {
+  z-index: 99999;
 }
 
 footer strong {

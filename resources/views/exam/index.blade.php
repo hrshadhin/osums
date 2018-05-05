@@ -106,10 +106,10 @@
                                             <tr>
                                                 <th>Id No</th>
                                                 <th>Name</th>
-                                                <th>Raw Score</th>
-                                                <th>%</th>
-                                                <th>Weight</th>
-                                                <th>% X Weight</th>
+                                                <th>Written</th>
+                                                <th>Quiz</th>
+                                                <th>Presentation</th>
+                                                <th>Lab/Practical</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -161,22 +161,22 @@
                     <form id="markUpdateForm" class="" novalidate  method="post" action="" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-3">
-                                <label class="blue"><strong>Raw Score:<strong></label><br>
+                                <label class="blue"><strong>Written:<strong></label><br>
                                   <input type="number" id="raw_score" class="form-control"  name="raw_score"  required />
 
                             </div>
                             <div class="col-md-3">
-                                <label class="blue"><strong>%:<strong></label><br>
+                                <label class="blue"><strong>Quiz:<strong></label><br>
                                   <input type="number" id="percentage" class="form-control"  name="percentage"  required />
 
                             </div>
                             <div class="col-md-3">
-                                <label class="blue"><strong>Weight:<strong></label><br>
+                                <label class="blue"><strong>Presentation:<strong></label><br>
                                   <input type="number" id="weight" class="form-control"  name="weight"  required />
 
                             </div>
                             <div class="col-md-3">
-                                <label class="blue"><strong>% X Weight:<strong></label><br>
+                                <label class="blue"><strong>Lab/Practical:<strong></label><br>
                                   <input type="number" id="percentage_x_weight" class="form-control"  name="percentage_x_weight"  required />
 
                             </div>

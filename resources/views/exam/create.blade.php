@@ -113,10 +113,10 @@
 
                                        <th>Id No</th>
                                        <th>Name</th>
-                                       <th>Raw Score</th>
-                                       <th>%</th>
-                                       <th>Weight</th>
-                                       <th>% X Weight</th>
+                                       <th>Written</th>
+                                       <th>Quiz</th>
+                                       <th>Presentation</th>
+                                       <th>Lab/Practical</th>
 
                                     </tr>
                                  </thead>
@@ -322,6 +322,8 @@
                   rawScore.required = "required";
                   rawScore.className="form-control";
                   rawScore.name="raw_score["+id+"]";
+                  rawScore.value = "0";
+
 
                   cell2.appendChild(rawScore);
 
@@ -331,6 +333,8 @@
                   percentage.required = "required";
                   percentage.className="form-control";
                   percentage.name="percentage["+id+"]";
+                  percentage.value = "0";
+
 
                   cell3.appendChild(percentage);
 
@@ -340,12 +344,15 @@
                   weight.required = "required";
                   weight.className="form-control";
                   weight.name="weight["+id+"]";
+                  weight.value = "0";
+
 
                   cell4.appendChild(weight);
 
                   var cell5 = row.insertCell(5);
                   var percentage_x_weight = document.createElement("input");
                   percentage_x_weight.type = "number";
+                  percentage_x_weight.value = "0";
                   percentage_x_weight.required = "required";
                   percentage_x_weight.className="form-control";
                   percentage_x_weight.name="percentage_x_weight["+id+"]";

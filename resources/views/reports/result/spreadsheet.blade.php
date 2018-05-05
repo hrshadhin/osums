@@ -58,55 +58,42 @@ table {
         <tr>
             <th colspan="2" rowspan="2">Id NO</th>
             <th colspan="2" rowspan="2">Name</th>
-            <th style="text-align: center" colspan="4">Midterm Exam(50)</th>
-            <th style="text-align: center" colspan="4">Final Exam(100)</th>
-            <th style="text-align: center" colspan="4">Lab & Quiz (20+80)</th>
-            <th class="rotate" rowspan="2">Total<br>Score</th>
-            <th class="rotate" rowspan="2">Total<br>Weight</th>
-            <th class="rotate" rowspan="2">Grade<br>Point<br>(Total Score/<br>Total Weight)</th>
-            <th class="rotate" rowspan="2">Grade</th>
+            <th style="text-align: center" colspan="5">Midterm Exam(100)</th>
+            <th style="text-align: center" colspan="5">Final Exam(100)</th>
+            <th class="rotate">AVG<br>Total</th>
+            <th class="rotate">Grade</th>
         </tr>
 
         <tr>
 
-            <td >Raw Score</td>
-            <td >%</td>
-            <td>Weight</td>
-            <td>% X Weight</td>
-            <td >Raw Score</td>
-            <td >%</td>
-            <td>Weight</td>
-            <td>% X Weight</td>
-            <td >Raw Score</td>
-            <td >%</td>
-            <td>Weight</td>
-            <td>% X Weight</td>
+            <td >Written</td>
+            <td >Quiz</td>
+            <td>Present.</td>
+            <td>Lab</td>
+            <td>Total</td>
+            <td >Written</td>
+            <td >Quiz</td>
+            <td>Presentation</td>
+            <td>Lab</td>
+            <td>Total</td>
 
         </tr>
         @foreach($students as $student)
         <tr>
             <td colspan="2">{{$student['idNo']}}</td>
             <td colspan="2">{{$student['name']}}</td>
-            <td >{{$student['m_Raw']}}</td>
-            <td >{{$student['m_percentage']}}</td>
-            <td>{{$student['m_weight']}}</td>
-            <td>{{$student['m_percentage_x_weight']}}</td>
+            <td >{{$student['m_written']}}</td>
+            <td >{{$student['m_quiz']}}</td>
+            <td>{{$student['m_presentation']}}</td>
+            <td>{{$student['m_lab']}}</td>
+            <td >{{$student['m_total_marks']}}</td>
+            <td >{{$student['f_written']}}</td>
+            <td >{{$student['f_quiz']}}</td>
+            <td>{{$student['f_presentation']}}</td>
+            <td>{{$student['f_lab']}}</td>
+            <td >{{$student['f_total_marks']}}</td>
 
-            <td >{{$student['f_Raw']}}</td>
-            <td >{{$student['f_percentage']}}</td>
-            <td>{{$student['f_weight']}}</td>
-            <td>{{$student['f_percentage_x_weight']}}</td>
-
-            <td >{{$student['l_Raw']}}</td>
-            <td >{{$student['l_percentage']}}</td>
-            <td>{{$student['l_weight']}}</td>
-            <td>{{$student['l_percentage_x_weight']}}</td>
-
-
-
-            <td >{{$student['total_score']}}</td>
-            <td >{{$student['total_weight']}}</td>
-            <td>{{round($student['grade_point'],2)}}</td>
+            <td >{{$student['avg_total_marks']}}</td>
             <td>{{$student['grade']}}</td>
 
 

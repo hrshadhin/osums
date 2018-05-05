@@ -55,11 +55,11 @@ h3{
   <table>
 
     <tr>
-      <td style="vertical-align:center;text-align:right;"><img src="assets/images/logo.jpg" /></td>
-      <td  colspan="4" style="text-align:center;vertical-align:center">
+      <td width="20%"style="vertical-align:center;text-align:right;"><img height="80px;" width="80px;" src="assets/images/logo.jpg" /></td>
+      <td width="60%" style="text-align:center;vertical-align:center">
         <h2>{{$metaData->institute}}<h2>
         </td>
-        <td style="text-align:right;vertical-align:top">
+        <td width="20%"style="text-align:right;vertical-align:top">
           Book:..................<br>
           Serial No:..................<br>
           Date:..................
@@ -67,11 +67,11 @@ h3{
 
       </tr>
       <tr>
-        <td></td>
-        <td colspan="4" style="text-align:center;vertical-align:top">
+        <td width="20%"></td>
+        <td width="60%" style="text-align:center;vertical-align:top">
           <h3>Transcript of Academic Records</h3>
         </td>
-        <td style="vertical-align:top">
+        <td width="20%" style="vertical-align:top">
           <div class="gradeSystem">
             A= 4(80.00-100%)<br>
             B= 3(70.00-79.99%)<br>
@@ -99,7 +99,7 @@ h3{
 
       </tr>
       <tr>
-        <td colspan="4">{{$metaData->department}}</td>
+        <td colspan="4"><strong>Department:</strong> {{$metaData->department}}</td>
         <td colspan="2"><strong>Examination:</strong> {{$metaData->exam}}</td>
         <td colspan="2"><strong>Session:</strong> {{$metaData->session}}</td>
       </tr>
@@ -315,6 +315,73 @@ h3{
 
       </tr>
 
+       <!-- 4th year -->
+       @foreach ($L4T1data->subjects as $key => $subject)
+      @if($key==0)
+      <tr>
+        <td rowspan="{{count($L4T1data->subjects)+1}}" colspan="2"> Year 4<br>Semeser 1
+          <br><br>
+          {{$L4T1data->monthYear}}
+        </td>
+        <td colspan="4">{{$subject['course']}}</td>
+        <td>{{$subject['credit']}}</td>
+        <td>{{$subject['grade']}}</td>
+        <td>{{$subject['point']}}</td>
+        <td rowspan="{{count($L4T1data->subjects)+1}}">{{$L4T1data->semGrade}}</td>
+        <td rowspan="{{count($L4T1data->subjects)+count($L4T2data->subjects)+2}}">{{$t4yData['grade']}}</td>
+
+      </tr>
+      @else
+      <tr>
+      <td colspan="4">{{$subject['course']}}</td>
+      <td>{{$subject['credit']}}</td>
+      <td>{{$subject['grade']}}</td>
+      <td>{{$subject['point']}}</td>
+    </tr>
+      @endif
+
+      @endforeach
+
+      <tr>
+        <td colspan="4"><strong>Total Credit<strong></td>
+        <td><strong>{{$L4T1data->totalCredit}}</strong></td>
+        <td></td>
+        <td><strong>{{$L4T1data->totalPoint}}</strong></td>
+
+      </tr>
+      @foreach ($L4T2data->subjects as $key => $subject)
+      @if($key==0)
+      <tr>
+        <td rowspan="{{count($L4T2data->subjects)+1}}" colspan="2"> Year 4<br>Semeser 2
+          <br><br>
+          {{$L4T2data->monthYear}}
+        </td>
+        <td colspan="4">{{$subject['course']}}</td>
+        <td>{{$subject['credit']}}</td>
+        <td>{{$subject['grade']}}</td>
+        <td>{{$subject['point']}}</td>
+        <td rowspan="{{count($L4T2data->subjects)+1}}">{{$L4T2data->semGrade}}</td>
+
+      </tr>
+      @else
+      <tr>
+      <td colspan="4">{{$subject['course']}}</td>
+      <td>{{$subject['credit']}}</td>
+      <td>{{$subject['grade']}}</td>
+      <td>{{$subject['point']}}</td>
+    </tr>
+      @endif
+
+      @endforeach
+
+      <tr>
+        <td colspan="4"><strong>Total Credit<strong></td>
+        <td><strong>{{$L4T2data->totalCredit}}</strong></td>
+        <td></td>
+        <td><strong>{{$L4T2data->totalPoint}}</strong></td>
+
+      </tr>
+
     </table>
     <br>
     <!--- summerize ---->
@@ -331,8 +398,8 @@ h3{
         <td> Year 1</td>
         <td>{{$fyData['credit']}}</td>
         <td>{{round($fyData['point'],2)}}</td>
-        <td rowspan="4">{{round($result['point'],2)}}</td>
-        <td rowspan="4">{{$result['grade']}}</td>
+        <td rowspan="5">{{round($result['point'],2)}}</td>
+        <td rowspan="5">{{$result['grade']}}</td>
       </tr>
       <tr>
         <td> Year 2</td>
@@ -345,23 +412,28 @@ h3{
         <td>{{round($tyData['point'],2)}}</td>
       </tr>
       <tr>
+        <td> Year 4</td>
+        <td>{{$t4yData['credit']}}</td>
+        <td>{{round($t4yData['point'],2)}}</td>
+      </tr>
+      <tr>
         <td style="text-align:right"> <strong>Total</strong></td>
-        <td>{{$fyData['credit']+$syData['credit']+$tyData['credit']}}</td>
+        <td>{{$fyData['credit']+$syData['credit']+$tyData['credit']+$t4yData['credit']}}</td>
         <td></td>
       </tr>
+      
     </table>
     <!-- bottom -->
     <table>
       <tr>
-        <td colspan="3"><td>
-          <td class="pull-right"><strong>Total Credit earned: {{$fyData['credit']+$syData['credit']+$tyData['credit']}}</td>
+          <td><strong>Total Credit earned: {{$fyData['credit']+$syData['credit']+$tyData['credit']+$t4yData['credit']}}</td>
             <td class="text-center"><strong>GPA: {{round($result['point'],2)}}</strong></td>
-          </tr>
-          <td colspan="3"><td>
-            <td></td>
+         
+          <td colspan="2"><td>
             <td class="text-center"><strong>Result: {{$result['result']}}</strong></td>
           </tr>
         </table>
+        <br>
     <!-- Office --->
     <table style="text-align:left">
       <tr>

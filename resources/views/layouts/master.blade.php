@@ -20,7 +20,7 @@
 		<link href="{{ URL::asset('assets/css/app.css')}}" rel="stylesheet">
     @yield("extrastyle")
     <script>
-      var hash = '{{AppHelper::gerCRVHash()}}';
+      var hash = '{{$idh}}';
     </script>
   </head>
 
@@ -229,18 +229,7 @@
 
   <!--Child Page Content End  -->
 
-  <!-- footer content -->
-  <footer>
-    <div class="pull-right">
-      Developed by <a href="https://shanixlab.com">ShanixLab</a>
-    </div>
-    <div class="clearfix"></div>
-  </footer>
-  <!-- /footer content -->
-</div>
-</div>
-
-
+@include('layouts.footer')
 
 <!-- jQuery -->
 <script src="{{ URL::asset('assets/js/jquery.min.js')}}"></script>
@@ -287,6 +276,7 @@
             styling: 'bootstrap3'
       });
       @endif
+
     });
   </script>
   <!-- /PNotify -->

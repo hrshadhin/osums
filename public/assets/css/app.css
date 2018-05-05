@@ -77,3 +77,11 @@ float: right;
 #crvPop {
   z-index: 99999999;
 }
+
+footer strong {
+  color: #1abb9c;
+}
+footer a {
+  color: #3498db;
+  font-weight: bold;
+}

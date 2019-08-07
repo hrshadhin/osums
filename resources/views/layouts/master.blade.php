@@ -47,6 +47,12 @@
                 <h3>Primary Menu</h3>
                 <ul class="nav side-menu">
                   @can('Admin')
+                    <li><a><i class="fa fa-search"></i> Search <span class="fa fa-chevron-down"></span></a>
+                      <ul class="nav child_menu">
+                        <li><a href="{{URL::route('search.students')}}">Students</a></li>
+                      </ul>
+                    </li>
+
                   <li><a><i class="fa fa-home"></i> Departments <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="{{URL::route('department.create')}}">Add New</a></li>

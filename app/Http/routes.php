@@ -142,6 +142,9 @@ Route::group(['middleware' => 'auth'], function()
   Route::get('/dormitory/report/fee','DormitoryController@reportfee');
   Route::get('/dormitory/report/fee/{dormId}/{month}','DormitoryController@reportfeeprint');
 
+  Route::get('/search/students','StudentController@search_view')->name('search.students');
+  Route::post('/search/students','StudentController@search')->name('search.students.list');
+
   //barcode generate
   Route::get('/barcode','barcodeController@index');
   Route::post('/barcode','barcodeController@generate');

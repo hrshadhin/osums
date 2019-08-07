@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\Controller;
 use App\Student;
@@ -60,6 +61,38 @@ class studentController extends Controller {
 
 		return view('student.index',compact('students','departments','selectDep'));
 	}
+
+    function search_view(){
+        $departments    =   Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+        $sessions       =   Student::select('session','session')->distinct()->lists('session','session');
+        $selectDep      =   "";
+        $students       =   array();
+        $selectSem      =   "";
+        $session        =   "";
+        return view('search.student',compact('session','students','sessions','departments','selectDep','selectSem'));
+    }
+
+    function search(Request $request){
+        DB::enableQueryLog();
+        $students=[];
+        $selectDep      =   "";
+        $departments    =   Department::select('id','name')->orderby('name','asc')->lists('name', 'id');
+        $sessions       =   Student::select('session','session')->distinct()->lists('session','session');
+
+        if ( $request->has('search_by_id') ){
+            $students=Student::where('idNo',$request->search_by_id)
+                ->orWhere('firstName','like','%'.$request->search_by_id.'%')
+                ->orWhere('middleName','like','%'.$request->search_by_id.'%')
+                ->orWhere('lastName','like','%'.$request->search_by_id.'%')
+                ->get();
+        }
+
+        if ( $request->has('request_type') ){
+            return (string) view('pertials.table',compact('students'));
+        }else{
+            return view('search.student',compact('session','students','sessions','departments','selectDep','semesters','selectSem'));
+        }
+    }
 
 	public function studentList($dID,$session)
 	{

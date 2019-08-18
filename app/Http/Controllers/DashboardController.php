@@ -31,12 +31,12 @@ class DashboardController extends Controller {
 		$totalAttendance = Attendance::groupBy('date')->get();
 		$totalExam = Exam::groupBy('exam')->groupBy('subject_id')->get();
 		$total = [
-			'admitted' =>count($totalAdmit),
-			'registered' =>count($totalRegisterd),
-			'department' =>count($totalDepartment),
-			'subject' =>count($totalSubject),
-			'attendance' =>count($totalAttendance),
-			'exam' =>count($totalExam),
+			'admitted' =>count((array)$totalAdmit),
+			'registered' =>count((array)$totalRegisterd),
+			'department' =>count((array)$totalDepartment),
+			'subject' =>count((array)$totalSubject),
+			'attendance' =>count((array)$totalAttendance),
+			'exam' =>count((array)$totalExam),
 		];
 		//graph data
 		$monthlyIncome= Account::selectRaw('month(date) as month, sum(amount) as amount')

@@ -24,17 +24,17 @@ class DashboardController extends Controller {
 	{
 		$error = Session::get('error');
 		$success=Session::get('success');
-		$totalAdmit = Student::count();
+		$totalAdmit = Student::get();
 		$totalRegisterd = Registration::groupBy('students_id')->get();
-		$totalDepartment = Department::count();
-		$totalSubject = Subject::count();
+		$totalDepartment = Department::get();
+		$totalSubject = Subject::get();
 		$totalAttendance = Attendance::groupBy('date')->get();
 		$totalExam = Exam::groupBy('exam')->groupBy('subject_id')->get();
 		$total = [
-			'admitted' =>$totalAdmit,
+			'admitted' =>count($totalAdmit),
 			'registered' =>count($totalRegisterd),
-			'department' =>$totalDepartment,
-			'subject' =>$totalSubject,
+			'department' =>count($totalDepartment),
+			'subject' =>count($totalSubject),
 			'attendance' =>count($totalAttendance),
 			'exam' =>count($totalExam),
 		];

@@ -21,7 +21,7 @@ class instituteController extends Controller {
 	{
 
 		$institute= Institute::select("*")->first();
-		if(count($institute)<1)
+		if(!$institute)
 		{
 			$institute=new Institute;
 			$institute->name = "";
